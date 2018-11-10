@@ -1,0 +1,57 @@
+version: "3.7"
+x-postgresql_port: &postgresql_port 5432
+x-geoserver_port : &geoserver_port  8080
+x-postgrest_port : &postgrest_port  3000
+x-nginx_port     : &nginx_port      8081
+services:
+    dz_pg:
+        build:
+            context: .
+            dockerfile: Dockerfile.pg
+        hostname: dz_pg
+        ports:
+            - target: 5432
+              published: *postgresql_port
+        networks:
+            - dz
+    dz_gs:
+        build:
+            context: .
+            dockerfile: Dockerfile.gs
+        hostname: dz_gs
+        ports:
+            - target: 8080
+              published: *geoserver_port
+        networks:
+            - dz
+        depends_on:
+            - dz_pg
+    dz_pr:
+        build:
+            context: .
+            dockerfile: Dockerfile.pr
+        hostname: dz_pr
+        ports:
+            - target: 3000
+              published: *postgrest_port
+        networks:
+            - dz
+        depends_on:
+            - dz_pg
+    dz_ng:
+        build:
+            context: .
+            dockerfile: Dockerfile.ng
+        hostname: dz_ng
+        ports:
+            - target: 80
+              published: *nginx_port
+        networks:
+            - dz
+        depends_on:
+            - dz_pg
+            - dz_gs
+            - dz_pr
+networks:
+    dz:
+        driver: bridge

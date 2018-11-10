@@ -1,0 +1,17 @@
+FROM nginx
+
+MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
+   apt-get install -y --no-install-recommends       \
+      apt-utils                                     \
+      wget                                          \
+      procps                                      &&\
+   rm -rf /var/lib/apt/lists/*
+
+RUN  rm -Rf /var/log/nginx/access.log             &&\
+     touch  /var/log/nginx/access.log             &&\
+	  rm -Rf /var/log/nginx/error.log              &&\
+     touch  /var/log/nginx/error.log
+
+COPY ./nginx-html /usr/share/nginx/html

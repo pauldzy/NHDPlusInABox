@@ -1,0 +1,35 @@
+FROM postgres:10.6
+
+MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
+   apt-get install -y --no-install-recommends       \
+      apt-utils                                     \
+      ca-certificates                             &&\
+   rm -rf /var/lib/apt/lists/*
+   
+RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
+   apt-get install -y --no-install-recommends       \
+      libaio1                                       \
+      build-essential                               \
+      wget                                          \
+      dos2unix                                      \
+      postgresql-10-postgis-2.5                     \
+      postgresql-10-postgis-2.5-scripts             \
+      postgresql-10-pgrouting*                      \
+      postgresql-server-dev-10                      \
+      openssh-client                                \
+      sshpass                                       \
+      parallel                                      \
+      unzip                                         \
+      vim                                         &&\ 
+   rm -rf /var/lib/apt/lists/*
+    
+ADD init-pg.sh /docker-entrypoint-initdb.d/init.sh
+
+RUN mkdir -p /home/postgres/.ssh                  &&\
+    mkdir -p /data/nhdplus_data                   &&\
+    mkdir -p /data/ow_ephemeral                   &&\
+    chown -R postgres:postgres /home/postgres     &&\
+    chown -R postgres:postgres /data/nhdplus_data &&\
+    chown -R postgres:postgres /data/ow_ephemeral
