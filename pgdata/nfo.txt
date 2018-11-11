@@ -1,0 +1,2 @@
+This directory will contain the nhdplus tablespaces.  Do not alter or delete these files while running the containers.
+Each build will purge this directory.

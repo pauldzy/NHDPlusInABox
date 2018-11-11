@@ -14,6 +14,9 @@ services:
               published: *postgresql_port
         networks:
             - dz
+        volumes:
+            - ./loading_dock:/loading_dock
+            - ./pgdata:/pgdata
     dz_gs:
         build:
             context: .
@@ -24,6 +27,8 @@ services:
               published: *geoserver_port
         networks:
             - dz
+        volumes:
+            - ./loading_dock:/loading_dock
         depends_on:
             - dz_pg
     dz_pr:
@@ -36,6 +41,8 @@ services:
               published: *postgrest_port
         networks:
             - dz
+        volumes:
+            - ./loading_dock:/loading_dock
         depends_on:
             - dz_pg
     dz_ng:
@@ -48,6 +55,8 @@ services:
               published: *nginx_port
         networks:
             - dz
+        volumes:
+            - ./loading_dock:/loading_dock
         depends_on:
             - dz_pg
             - dz_gs

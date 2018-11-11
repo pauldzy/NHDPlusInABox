@@ -1,5 +1,14 @@
 #/bin/sh
 
+mkdir -p /home/postgres/.ssh
+rm   -Rf /pgdata/nhdplus_data
+rm   -Rf /pgdata/ow_ephemeral
+mkdir -p /pgdata/nhdplus_data
+mkdir -p /pgdata/ow_ephemeral
+chown -R postgres:postgres /home/postgres
+chown -R postgres:postgres /pgdata/nhdplus_data
+chown -R postgres:postgres /pgdata/ow_ephemeral
+
 sed -i -e"s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql/data/postgresql.conf
 
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
@@ -11,9 +20,9 @@ psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD 'nhdplus';"
 psql -c "CREATE USER waterspg             WITH PASSWORD 'nhdplus';"
 psql -c "CREATE USER waterspg_support     WITH PASSWORD 'nhdplus';"
 
-psql -c "CREATE TABLESPACE nhdplus_data OWNER nhdplus LOCATION '/data/nhdplus_data';"
+psql -c "CREATE TABLESPACE nhdplus_data OWNER nhdplus LOCATION '/pgdata/nhdplus_data';"
 psql -c "GRANT CREATE ON TABLESPACE nhdplus_data TO PUBLIC;"
-psql -c "CREATE TABLESPACE ow_ephemeral OWNER nhdplus LOCATION '/data/ow_ephemeral';"
+psql -c "CREATE TABLESPACE ow_ephemeral OWNER nhdplus LOCATION '/pgdata/ow_ephemeral';"
 psql -c "GRANT CREATE ON TABLESPACE ow_ephemeral TO PUBLIC;"
 
 psql -c "CREATE DATABASE nhdplus;"
