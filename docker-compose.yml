@@ -2,21 +2,35 @@ version: "3.7"
 x-postgresql_port: &postgresql_port 5432
 x-geoserver_port : &geoserver_port  8080
 x-postgrest_port : &postgrest_port  3000
+x-jupyter_port   : &jupyter_port    8888
 x-nginx_port     : &nginx_port      8081
+x-loading_dock   : &loading_dock    ./loading_dock
+x-workspace      : &workspace       ./workspace
+x-pgdata         : &pgdata          ./pgdata
+x-master_password: &master_password nhdplus
 services:
     dz_pg:
         build:
             context: .
             dockerfile: Dockerfile.pg
         hostname: dz_pg
+        environment:
+            POSTGRES_PASSWORD: *master_password
         ports:
             - target: 5432
               published: *postgresql_port
         networks:
             - dz
         volumes:
-            - ./loading_dock:/loading_dock
-            - ./pgdata:/pgdata
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+            - type: bind
+              source: *workspace
+              target: /workspace
+            - type: bind
+              source: *pgdata
+              target: /pgdata
     dz_gs:
         build:
             context: .
@@ -28,7 +42,12 @@ services:
         networks:
             - dz
         volumes:
-            - ./loading_dock:/loading_dock
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+            - type: bind
+              source: *workspace
+              target: /workspace
         depends_on:
             - dz_pg
     dz_pr:
@@ -42,7 +61,28 @@ services:
         networks:
             - dz
         volumes:
-            - ./loading_dock:/loading_dock
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+        depends_on:
+            - dz_pg
+    dz_jp:
+        build:
+            context: .
+            dockerfile: Dockerfile.jp
+        hostname: dz_jp
+        ports:
+            - target: 8888
+              published: *jupyter_port
+        networks:
+            - dz
+        volumes:
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+            - type: bind
+              source: *workspace
+              target: /workspace
         depends_on:
             - dz_pg
     dz_ng:
@@ -56,7 +96,12 @@ services:
         networks:
             - dz
         volumes:
-            - ./loading_dock:/loading_dock
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+            - type: bind
+              source: *workspace
+              target: /workspace
         depends_on:
             - dz_pg
             - dz_gs
@@ -64,3 +109,4 @@ services:
 networks:
     dz:
         driver: bridge
+    

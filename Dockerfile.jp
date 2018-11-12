@@ -1,0 +1,3 @@
+FROM geonotebook/geonotebook
+
+MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
