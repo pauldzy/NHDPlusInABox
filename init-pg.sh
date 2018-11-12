@@ -3,7 +3,7 @@
 mkdir -p /home/postgres/.ssh
 rm   -Rf /pgdata/nhdplus_data
 rm   -Rf /pgdata/ow_ephemeral
-rm   -Rf /workspace/*
+find /workspace ! -name 'nfo.txt' -exec rm -Rf {} + || true
 mkdir -p /pgdata/nhdplus_data
 mkdir -p /pgdata/ow_ephemeral
 chown -R postgres:postgres /home/postgres

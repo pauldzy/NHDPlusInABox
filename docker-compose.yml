@@ -37,7 +37,6 @@ services:
             dockerfile: Dockerfile.gs
         hostname: dz_gs
         environment:
-            POSTGRESQL_PORT: *postgresql_port
             POSTGRES_PASSWORD: *master_password
         ports:
             - target: 8080
@@ -59,7 +58,6 @@ services:
             dockerfile: Dockerfile.pr
         hostname: dz_pr
         environment:
-            POSTGRESQL_PORT: *postgresql_port
             POSTGRES_PASSWORD: *master_password
         ports:
             - target: 3000
@@ -78,7 +76,6 @@ services:
             dockerfile: Dockerfile.jp
         hostname: dz_jp
         environment:
-            POSTGRESQL_PORT: *postgresql_port
             POSTGRES_PASSWORD: *master_password
         ports:
             - target: 8888
@@ -100,7 +97,6 @@ services:
             dockerfile: Dockerfile.ng
         hostname: dz_ng
         environment:
-            POSTGRESQL_PORT: *postgresql_port
             POSTGRES_PASSWORD: *master_password
         ports:
             - target: 80
