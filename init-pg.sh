@@ -3,6 +3,7 @@
 mkdir -p /home/postgres/.ssh
 rm   -Rf /pgdata/nhdplus_data
 rm   -Rf /pgdata/ow_ephemeral
+rm   -Rf /workspace/*
 mkdir -p /pgdata/nhdplus_data
 mkdir -p /pgdata/ow_ephemeral
 chown -R postgres:postgres /home/postgres
@@ -13,12 +14,12 @@ sed -i -e"s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql
 
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
 
-psql -c "CREATE USER nhdplus              WITH PASSWORD 'nhdplus';"
-psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD 'nhdplus';"
-psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD 'nhdplus';"
-psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD 'nhdplus';"
-psql -c "CREATE USER waterspg             WITH PASSWORD 'nhdplus';"
-psql -c "CREATE USER waterspg_support     WITH PASSWORD 'nhdplus';"
+psql -c "CREATE USER nhdplus              WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER waterspg             WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER waterspg_support     WITH PASSWORD '${POSTGRES_PASSWORD}';"
 
 psql -c "CREATE TABLESPACE nhdplus_data OWNER nhdplus LOCATION '/pgdata/nhdplus_data';"
 psql -c "GRANT CREATE ON TABLESPACE nhdplus_data TO PUBLIC;"
