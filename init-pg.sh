@@ -1,14 +1,11 @@
 #/bin/sh
 
-mkdir -p /home/postgres/.ssh
 rm   -Rf /pgdata/nhdplus_data
 rm   -Rf /pgdata/ow_ephemeral
-find /workspace ! -name 'nfo.txt' -exec rm -Rf {} + || true
+find /workspace ! -name 'nfo.txt' -mindepth 1 -exec rm -Rf {} + || true
+
 mkdir -p /pgdata/nhdplus_data
 mkdir -p /pgdata/ow_ephemeral
-chown -R postgres:postgres /home/postgres
-chown -R postgres:postgres /pgdata/nhdplus_data
-chown -R postgres:postgres /pgdata/ow_ephemeral
 
 sed -i -e"s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql/data/postgresql.conf
 
@@ -18,6 +15,8 @@ psql -c "CREATE USER nhdplus              WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER nhdplus_indexing     WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER nhdplus_toponet      WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER waterspg             WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER waterspg_support     WITH PASSWORD '${POSTGRES_PASSWORD}';"
 

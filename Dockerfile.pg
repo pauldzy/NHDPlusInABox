@@ -27,5 +27,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
     
 ADD init-pg.sh /docker-entrypoint-initdb.d/init.sh
 
-RUN mkdir -p /home/postgres/.ssh                    &&\
-    chown -R postgres:postgres /home/postgres
+RUN mkdir -p /home/postgres/.ssh                  &&\
+    chown -R postgres:postgres /home/postgres     &&\
+    mkdir -p /loading_dock                        &&\
+    mkdir -p /pgdata                              &&\
+    mkdir -p /workspace                           &&\
+    mkdir -p /pgdata/nhdplus_data                 &&\
+    mkdir -p /pgdata/ow_ephemeral                 &&\
+    chown -R postgres:postgres /loading_dock      &&\
+    chown -R postgres:postgres /pgdata            &&\
+    chmod -R 777 /loading_dock /workspace         &&\
+    chmod g+s /loading_dock /workspace

@@ -32,7 +32,7 @@ There are some challenges to this concept which may send you immediately away or
 
    
    loading_dock: 110 GB  
-   pgdata: 
+   pgdata: 180 GB
 
 * **Processor Requirements**
    
