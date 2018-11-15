@@ -7,7 +7,13 @@ find /workspace ! -name 'nfo.txt' -mindepth 1 -exec rm -Rf {} + || true
 mkdir -p /pgdata/nhdplus_data
 mkdir -p /pgdata/ow_ephemeral
 
-sed -i -e"s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql/data/postgresql.conf
+sed -i -e "s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql/data/postgresql.conf
+
+mem=`awk '/MemTotal/ {print $2}' /proc/meminfo`
+sed -i -e "s/^#wal_buffers = -1.*$/wal_buffers = 16MB/" /var/lib/postgresql/data/postgresql.conf
+sed -i -e "s/^#min_wal_size = 80MB.*$/min_wal_size = 4GB/" /var/lib/postgresql/data/postgresql.conf
+sed -i -e "s/^#max_wal_size = 1GB.*$/max_wal_size = 8GB/" /var/lib/postgresql/data/postgresql.conf
+sed -i -e "s/^#checkpoint_completion_target = 0.5.*$/checkpoint_completion_target = 0.9/" /var/lib/postgresql/data/postgresql.conf
 
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
 
