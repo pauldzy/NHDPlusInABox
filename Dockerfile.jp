@@ -1,3 +1,68 @@
-FROM geonotebook/geonotebook
+FROM jupyter/scipy-notebook:latest
 
 MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
+
+USER root
+
+RUN apt-get update                           &&\
+    apt-get install -y --no-install-recommends \
+       python3.6                               \
+       python3.6-dev                           \
+       python3-numpy                           \
+       python3-gdal                            \
+       python3-pip                             \
+       python3-setuptools                      \
+       python3-libxml2                         \
+       gdal-bin                                \
+       sqlite3                                 \
+       binutils                                \
+       libcurl4-gnutls-dev                     \
+       libxml2-dev                             \
+       libproj-dev                             \
+       libgdal20                               \
+       libgdal-dev                             \ 
+       libgeos-dev                             \
+       libopenjp2-7-dev                        \
+       libpq-dev                               \
+       libjson-c-dev                           \
+       libxerces-c-dev                         \
+       libtiff-dev                             \
+       libjpeg-dev                             \
+       libkml-dev                              \
+       libsqlite3-dev                          \
+       libopenjp2-7-dev                        \
+       postgresql-client                       \
+       gettext                               &&\
+    apt-get clean                            &&\
+    rm -rf /var/lib/apt/lists/*              &&\
+    rm -rf /var/cache/apt/*
+
+# The following RUN statement essentially removes all security from the Jupyter notebook container
+# Remove this step or add a password if you require greater security
+RUN echo "c.NotebookApp.token    = u''" >> /opt/conda/etc/jupyter/jupyter_notebook_config.py &&\
+    echo "c.NotebookApp.password = u''" >> /opt/conda/etc/jupyter/jupyter_notebook_config.py &&\
+    chmod 755      /opt/conda/etc/jupyter/jupyter_notebook_config.py                         &&\
+    chown $NB_USER /opt/conda/etc/jupyter/jupyter_notebook_config.py
+
+USER $NB_USER
+
+RUN pip3 install wheel
+    
+RUN pip3 install gdal==$(gdal-config --version) --global-option=build_ext --global-option="-I/usr/include/gdal"
+
+RUN pip3 install    \
+    bonobo[jupyter] \
+    fiona           \
+    folium          \
+    geocoder        \
+    geopandas       \
+    geopy           \
+    googlemaps      \
+    psycopg2        \
+    pyproj          \
+    pysal           \
+    rtree           \
+    shapely         \
+    XlsxWriter
+
+COPY /jupyter /home/jovyan
