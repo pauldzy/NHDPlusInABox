@@ -98,6 +98,9 @@ services:
         hostname: dz_ng
         environment:
             POSTGRES_PASSWORD: *master_password
+            JUPYTER_PORT: *jupyter_port
+            POSTGREST_PORT: *postgrest_port
+            GEOSERVER_PORT: *geoserver_port
         ports:
             - target: 80
               published: *nginx_port

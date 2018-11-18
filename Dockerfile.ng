@@ -1,17 +1,49 @@
-FROM nginx
+FROM python:3.6
 
-MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
+LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
-   apt-get install -y --no-install-recommends       \
-      apt-utils                                     \
-      wget                                          \
-      procps                                      &&\
-   rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y    \
+       python3-dev                          \
+       python3-pip                          \
+       python3-psycopg2                     \
+       curl                                 \
+       dos2unix                             \
+       nginx                                \
+       supervisor                           \
+       vim                                &&\ 
+    rm -rf /var/lib/apt/lists/*
 
-RUN  rm -Rf /var/log/nginx/access.log             &&\
-     touch  /var/log/nginx/access.log             &&\
-	  rm -Rf /var/log/nginx/error.log              &&\
-     touch  /var/log/nginx/error.log
+RUN  rm /etc/nginx/sites-enabled/default
+COPY ./nginx/nginx-sites.conf /etc/nginx/sites-available/
+RUN  dos2unix --quiet /etc/nginx/sites-available/nginx-sites.conf
 
-COPY ./nginx-html /usr/share/nginx/html
+RUN  ln -s /etc/nginx/sites-available/nginx-sites.conf /etc/nginx/sites-enabled/nginx-sites.conf
+COPY ./nginx/uwsgi.ini /var/www/app/
+RUN  dos2unix --quiet /var/www/app/uwsgi.ini
+
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf  &&\
+    mkdir -p /var/log/supervisor
+    
+COPY ./nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
+
+RUN pip3 install --upgrade pip
+
+RUN pip3 install     \
+   Flask             \
+   Flask-SQLAlchemy  \
+   Flask-Migrate     \
+   dicttoxml         \
+   psycopg2          \
+   uWSGI
+
+RUN mkdir -p /src/flask          &&\
+    mkdir -p /src/log
+
+COPY ./nginx /src
+RUN  dos2unix --quiet /src/init.sh &&\
+     chmod 755 /src/init.sh
+
+EXPOSE 8080
+
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]

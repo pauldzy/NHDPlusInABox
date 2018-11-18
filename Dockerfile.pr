@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-MAINTAINER Paul Dziemiela <Paul.Dziemiela@erg.com>
+LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
 ENV POSTGREST_VERSION 5.1.0
 
