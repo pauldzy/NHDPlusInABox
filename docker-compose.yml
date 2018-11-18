@@ -102,7 +102,7 @@ services:
             POSTGREST_PORT: *postgrest_port
             GEOSERVER_PORT: *geoserver_port
         ports:
-            - target: 80
+            - target: 8081
               published: *nginx_port
         networks:
             - dz

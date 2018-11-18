@@ -44,6 +44,6 @@ COPY ./nginx /src
 RUN  dos2unix --quiet /src/init.sh &&\
      chmod 755 /src/init.sh
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
