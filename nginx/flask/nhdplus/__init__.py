@@ -7,7 +7,8 @@ app = Flask(__name__);
 ############################################################################### 
 @app.route("/")
 def index():
-   return "<h1 style='color:blue'>Flask is up and running.</h1>";
+   return "<h1>NHDPlus In A Box</h1>"
+        + "<a href='/static/quick_setup.html'>Quick setup instructions</a>";
    
 ###############################################################################
 ##

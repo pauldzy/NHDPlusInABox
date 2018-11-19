@@ -18,6 +18,7 @@ sed -i -e "s/^#checkpoint_completion_target = 0.5.*$/checkpoint_completion_targe
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
 
 psql -c "CREATE USER nhdplus              WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "ALTER  USER nhdplus              WITH SUPERUSER;"
 psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD '${POSTGRES_PASSWORD}';"

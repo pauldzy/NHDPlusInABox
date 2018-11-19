@@ -20,7 +20,7 @@ docker-compose build
 docker-compose up
 ```
 
-Then open the default nginx server page, mostly probably at http://localhost:8081 for information on how to download and install the NHDPlus data.
+Then open the default server page, mostly probably at http://localhost:8081 for information on how to download and install the NHDPlus data.
 
 ## Notes
 
@@ -61,6 +61,6 @@ There are some challenges to this concept which may send you immediately away or
    PostgreSQL: postgres:10.6  
    Geoserver:  winsent/geoserver:2.13  
    PostgREST:  ubuntu:latest  
-   Jupyter:    geonotebook/geonotebook  
-   Nginx:      nginx  
+   Jupyter:    jupyter/scipy-notebook 
+   Nginx:      python:3.6 
   
