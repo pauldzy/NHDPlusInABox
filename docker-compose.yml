@@ -28,8 +28,8 @@ services:
             - type: bind
               source: *workspace
               target: /workspace
-            - type: bind
-              source: *pgdata
+            - type: volume
+              source: pgdata
               target: /pgdata
     dz_gs:
         build:
@@ -101,6 +101,7 @@ services:
             JUPYTER_PORT: *jupyter_port
             POSTGREST_PORT: *postgrest_port
             GEOSERVER_PORT: *geoserver_port
+            NGINX_PORT: *nginx_port
         ports:
             - target: 8081
               published: *nginx_port
@@ -120,4 +121,5 @@ services:
 networks:
     dz:
         driver: bridge
-    
+volumes:
+    pgdata:

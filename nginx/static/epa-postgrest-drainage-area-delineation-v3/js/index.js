@@ -6,9 +6,9 @@ var split_check = true;
 var snapline,basins,catchments,streams;
 
 var drainage_delineation_url =
-  "http://localhost:3000/waterspg/rpc/drainage_area_delineation_v3";
+  "https://inlandwaters.geoplatform.gov/waterspg/rpc/drainage_area_delineation_v3";
 var random_point_url =
-  "http://localhost:3000/waterspg/rpc/random_point";
+  "https://inlandwaters.geoplatform.gov/waterspg/rpc/random_point";
 
 document.getElementById("dz_run_service").disabled = true;
 document.getElementById("busy").style.visibility = "hidden";

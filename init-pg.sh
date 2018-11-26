@@ -18,7 +18,6 @@ sed -i -e "s/^#checkpoint_completion_target = 0.5.*$/checkpoint_completion_targe
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
 
 psql -c "CREATE USER nhdplus              WITH PASSWORD '${POSTGRES_PASSWORD}';"
-psql -c "ALTER  USER nhdplus              WITH SUPERUSER;"
 psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_watersheds   WITH PASSWORD '${POSTGRES_PASSWORD}';"
@@ -26,6 +25,7 @@ psql -c "CREATE USER nhdplus_indexing     WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_toponet      WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER waterspg             WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER waterspg_support     WITH PASSWORD '${POSTGRES_PASSWORD}';"
+psql -c "CREATE USER sde                  WITH PASSWORD 'sde123unused123';"
 
 psql -c "CREATE TABLESPACE nhdplus_data OWNER nhdplus LOCATION '/pgdata/nhdplus_data';"
 psql -c "GRANT CREATE ON TABLESPACE nhdplus_data TO PUBLIC;"
@@ -33,16 +33,24 @@ psql -c "CREATE TABLESPACE ow_ephemeral OWNER nhdplus LOCATION '/pgdata/ow_ephem
 psql -c "GRANT CREATE ON TABLESPACE ow_ephemeral TO PUBLIC;"
 
 psql -c "CREATE DATABASE nhdplus;"
-psql -c "ALTER DATABASE nhdplus OWNER TO nhdplus;"
-
 psql -c "CREATE EXTENSION hstore;" nhdplus
 psql -c "CREATE EXTENSION postgis;" nhdplus
 psql -c "CREATE EXTENSION postgis_topology;" nhdplus
 psql -c "CREATE EXTENSION pgrouting;" nhdplus
 
+psql -c "ALTER DATABASE nhdplus OWNER TO nhdplus;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_delineation;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_navigation30;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_watersheds;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_indexing;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_toponet;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO waterspg;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO waterspg_support;"
+
 psql -c "GRANT ALL ON TABLE public.spatial_ref_sys TO nhdplus;" nhdplus
 psql -c "CREATE SCHEMA loading_dock AUTHORIZATION nhdplus;" nhdplus
-psql -c "CREATE SCHEMA waterspg AUTHORIZATION nhdplus;" nhdplus
+psql -c "CREATE SCHEMA waterspg AUTHORIZATION waterspg;" nhdplus
 psql -c "ALTER SCHEMA waterspg OWNER TO waterspg;" nhdplus
 psql -c "ALTER SCHEMA topology OWNER TO nhdplus;" nhdplus
 
