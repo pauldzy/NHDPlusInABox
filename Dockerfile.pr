@@ -30,7 +30,8 @@ RUN cd /tmp/postgrest-${POSTGREST_VERSION}     &&\
     stack build                                  \
        --copy-bins                               \
        --local-bin-path /usr/local/bin           \
-       --prefetch
+       --prefetch                                \
+       --ghc-options="-j +RTS -A256m"
 
 ADD ./postgrest.conf /etc/postgrest.conf
 CMD exec postgrest /etc/postgrest.conf

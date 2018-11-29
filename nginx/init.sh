@@ -27,7 +27,7 @@ done
 if [ "${JUPYTER_PORT}" != "8888" ]; then
    find /src/static -name '*.html' | while read filename
    do
-      sed -i -e "s|http://localhost:8888/|http://localhost:${JUPYTER_PORT}/|g" $filename
+      sed -i -e "s|var jp_port = \"8888\"|var jp_port = \"${JUPYTER_PORT}\"|g" $filename
       
    done
    
@@ -36,7 +36,16 @@ fi
 if [ "${NGINX_PORT}" != "8081" ]; then
    find /src/static -name '*.html' | while read filename
    do
-      sed -i -e "s|http://localhost:8081|http://localhost:${NGINX_PORT}/|g" $filename
+      sed -i -e "s|var ng_port = \"8081\"|var ng_port = \"${NGINX_PORT}\"|g" $filename
+      
+   done
+   
+fi
+
+if [ "${GEOSERVER_PORT}" != "8080" ]; then
+   find /src/static -name '*.html' | while read filename
+   do
+      sed -i -e "s|var gs_port = \"8080\"|var gs_port = \"${GEOSERVER_PORT}\"|g" $filename
       
    done
    

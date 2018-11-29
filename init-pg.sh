@@ -52,7 +52,7 @@ psql -c "GRANT ALL ON TABLE public.spatial_ref_sys TO nhdplus;" nhdplus
 psql -c "CREATE SCHEMA loading_dock AUTHORIZATION nhdplus;" nhdplus
 psql -c "CREATE SCHEMA waterspg AUTHORIZATION waterspg;" nhdplus
 psql -c "ALTER SCHEMA waterspg OWNER TO waterspg;" nhdplus
-psql -c "ALTER SCHEMA topology OWNER TO nhdplus;" nhdplus
+psql -c "ALTER SCHEMA topology OWNER TO nhdplus_toponet;" nhdplus
 
 psql -c "CREATE FUNCTION waterspg.test() RETURNS JSON AS \$\$ BEGIN RETURN json_object_agg('works',TRUE); END; \$\$ LANGUAGE 'plpgsql';" nhdplus
 psql -c "ALTER FUNCTION waterspg.test() OWNER TO waterspg;" nhdplus
