@@ -20,8 +20,8 @@ fi
    
 find /src/static -name '*.js' | while read filename
 do
-   sed -i -e "s|https://inlandwaters.geoplatform.gov/waterspg/|http://localhost:${POSTGREST_PORT}/|g" $filename
-      
+   sed -i -e "s|\"https://inlandwaters.geoplatform.gov/waterspg/|window.location.protocol + \"//\" + window.location.hostname + \":${POSTGREST_PORT}/|g" $filename
+
 done
 
 if [ "${JUPYTER_PORT}" != "8888" ]; then

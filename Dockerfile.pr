@@ -31,7 +31,7 @@ RUN cd /tmp/postgrest-${POSTGREST_VERSION}     &&\
        --copy-bins                               \
        --local-bin-path /usr/local/bin           \
        --prefetch                                \
-       --ghc-options="-j +RTS -A256m"
+       --ghc-options="-j +RTS -A256m -RTS"
 
 ADD ./postgrest.conf /etc/postgrest.conf
 CMD exec postgrest /etc/postgrest.conf

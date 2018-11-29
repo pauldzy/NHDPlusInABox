@@ -1,9 +1,8 @@
 <html>
    <head>
    </head>
-   
-   <body>
-      <script type="text/javascript">
+   <script type="text/javascript">
+      function set_href() {
          // These items are potentially changed during deployment
          var jp_port = "8888";
          var ng_port = "8081";
@@ -12,11 +11,14 @@
          // 
          var protocol = window.location.protocol;
          var hostname = window.location.hostname;
-         
+      
          document.getElementById("download").href   = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Download_NHDPlus_Data.ipynb";
          document.getElementById("pg_restore").href = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Load_NHDPlus_Database.ipynb";
          document.getElementById("nav_del1").href   = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-drainage-area-delineation-v3/index.html";
-      </script>
+      }
+   </script>
+   <body onload="set_href();">
+      <p>&nbsp;</p>
       <ol>
          <li>Download the WATERS pg dumps using <a id="download" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
          <li>Load the WATERS pg dumps into PostgreSQL using <a id="pg_restore" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
