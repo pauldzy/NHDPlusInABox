@@ -34,6 +34,7 @@ psql -c "GRANT CREATE ON TABLESPACE ow_ephemeral TO PUBLIC;"
 
 psql -c "CREATE DATABASE nhdplus;"
 psql -c "CREATE EXTENSION hstore;" nhdplus
+psql -c "CREATE EXTENSION \"uuid-ossp\";" nhdplus
 psql -c "CREATE EXTENSION postgis;" nhdplus
 psql -c "CREATE EXTENSION postgis_topology;" nhdplus
 psql -c "CREATE EXTENSION pgrouting;" nhdplus

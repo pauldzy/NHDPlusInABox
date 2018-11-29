@@ -15,10 +15,27 @@ RUN apt-get update                             &&\
 RUN apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
        vim                                       \
+       psmisc                                    \
+       build-essential                           \
+       dos2unix                                  \
+       pkg-config                                \
+       clang                                     \
+       zip                                       \
+       unzip                                     \
        wget                                      \
+       supervisor                                \
        libpq-dev                               &&\
     rm -rf /var/lib/apt/lists/*
 
+RUN cd /tmp                                    &&\
+    wget -q --show-progress https://github.com/begriffs/pg_listen/archive/master.zip &&\
+    unzip master.zip                           &&\
+    cd /tmp/pg_listen-master                   &&\
+    make                                       &&\
+    mv pg_listen /usr/bin                      &&\
+    chmod 755 /usr/bin/pg_listen               &&\
+    rm -Rf /tmp/pg_listen-master
+    
 RUN cd /tmp                                    &&\
     wget -q --show-progress https://github.com/PostgREST/postgrest/archive/v${POSTGREST_VERSION}.tar.gz &&\
     tar -xvf v${POSTGREST_VERSION}.tar.gz
@@ -31,10 +48,15 @@ RUN cd /tmp/postgrest-${POSTGREST_VERSION}     &&\
        --copy-bins                               \
        --local-bin-path /usr/local/bin           \
        --prefetch                                \
-       --ghc-options="-j +RTS -A256m -RTS"
+       --ghc-options="-j +RTS -A256m -RTS"     &&\
+    rm -Rf /tmp/postgrest-${POSTGREST_VERSION}
+       
+COPY ./postgrest/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
 
-ADD ./postgrest.conf /etc/postgrest.conf
-CMD exec postgrest /etc/postgrest.conf
+ADD ./postgrest/postgrest.conf /etc/postgrest.conf
+
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 3000
 

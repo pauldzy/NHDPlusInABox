@@ -2,8 +2,23 @@ FROM winsent/geoserver:2.13
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
-   apt-get install -y --no-install-recommends       \
-      apt-utils                                     \
-      curl                                        &&\
-   rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update                             &&\
+    apt-get install -y --no-install-recommends   \
+       apt-utils                                 \
+       ca-certificates                         &&\
+    rm -rf /var/lib/apt/lists/*
+    
+RUN apt-get update                             &&\
+    apt-get install -y --no-install-recommends   \
+       supervisor                                \
+       dos2unix                                  \
+       curl                                    &&\
+    rm -rf /var/lib/apt/lists/*
+
+COPY ./geoserver/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
+
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
+
