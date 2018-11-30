@@ -14,6 +14,7 @@ RUN apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
        supervisor                                \
        dos2unix                                  \
+       jq                                        \
        curl                                    &&\
     rm -rf /var/lib/apt/lists/*
 
