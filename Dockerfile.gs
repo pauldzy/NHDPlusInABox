@@ -20,5 +20,9 @@ RUN apt-get update                             &&\
 COPY ./geoserver/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
 
+COPY ./geoserver/init.sh /src/init.sh
+RUN  dos2unix --quiet /src/init.sh &&\
+     chmod 755 /src/init.sh
+
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
 
