@@ -3,7 +3,7 @@ var comid;
 var measure;
 var feature_type;
 var split_check = true;
-var snapline,basins,catchments,streams;
+var basemap,snapline,basins,catchments,streams;
 
 var pr_port = "3000";
 var gs_port = "8080";
@@ -20,10 +20,11 @@ document.getElementById("busy").style.visibility = "hidden";
 var map = L.map("map").setView([46.874626,-96.782341],12);
 mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+basemap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "Map data &copy; " + mapLink,
   maxZoom: 18
-}).addTo(map);
+});
+basemap.addTo(map);
 
 flowlines_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
@@ -322,6 +323,7 @@ function srvresponse(error, response, raw) {
   catchments.bringToBack();
   flowlines_ms.bringToBack();
   catchmentsp_ms.bringToBack();
+  basemap.bringToBack();
   
   busy_off();
 }
