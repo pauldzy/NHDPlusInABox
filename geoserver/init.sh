@@ -130,5 +130,29 @@ do
    
 done
 
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/cite?recurse=true
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/nurc?recurse=true
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/sde?recurse=true
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/sf?recurse=true
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/tiger?recurse=true
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}workspaces/topp?recurse=true
+
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/burg
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/capitals
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/cite_lakes
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/dem
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/giant_polygon
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/grass
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/green
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/poi
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/poly_landmarks
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/pophatch
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/population
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/rain
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/restricted
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/simple_roads
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/simple_streams
+curl -u admin:nhdplus --fail -X DELETE -H "$aj" -H "$cj" ${url}styles/tiger_roads
+
 exit $rc
 
