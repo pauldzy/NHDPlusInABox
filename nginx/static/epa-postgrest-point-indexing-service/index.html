@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>EPA PostgREST Point Indexing Service</title>
+  
+  
+  <link rel='stylesheet' href='http://unpkg.com/leaflet@1.3.1/dist/leaflet.css'>
+<link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css'>
+
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+  <div id="busy">
+  <svg width="57" height="57" viewBox="0 0 57 57" xmlns="http://www.w3.org/2000/svg" stroke="#000">
+    <g fill="none" fill-rule="evenodd">
+      <g transform="translate(1 1)" stroke-width="2">
+        <circle cx="5" cy="50" r="5">
+          <animate attributeName="cy" begin="0s" dur="2.2s" values="50;5;50;50" calcMode="linear" repeatCount="indefinite" />
+          <animate attributeName="cx" begin="0s" dur="2.2s" values="5;27;49;5" calcMode="linear" repeatCount="indefinite" />
+        </circle>
+        <circle cx="27" cy="5" r="5">
+          <animate attributeName="cy" begin="0s" dur="2.2s" from="5" to="5" values="5;50;50;5" calcMode="linear" repeatCount="indefinite" />
+          <animate attributeName="cx" begin="0s" dur="2.2s" from="27" to="27" values="27;49;5;27" calcMode="linear" repeatCount="indefinite" />
+        </circle>
+        <circle cx="49" cy="50" r="5">
+          <animate attributeName="cy" begin="0s" dur="2.2s" values="50;50;5;50" calcMode="linear" repeatCount="indefinite" />
+          <animate attributeName="cx" from="49" to="49" begin="0s" dur="2.2s" values="49;5;27;49" calcMode="linear" repeatCount="indefinite" />
+        </circle>
+      </g>
+    </g>
+  </svg>
+</div>
+<div id="container" style="width: 1200px;">
+  <div id="map" class="map" style="height: 400px; width: 600px; float: left;">
+  </div>
+  <div id="righty" style="width: 600px; float: left;">
+    <div id="top" style="text-align: center;">
+      <h3 style="margin-top:0px; margin-bottom: 3px;">PostgREST Point Indexing Service</h3>
+      <span style="font-family: Arial; font-size: 11px;">Add a point to the map or enter your NAD83 WKT text:</span>
+      <br/>
+      <input name="dzWKT" type="text" class="textbox" style="width: 400px;" id="dzWKT" onchange="updatewkt(this.value);" />
+      <br/>
+      <select name="dz_snap_type" id="dz_snap_type" onchange="menuOptions(this.value)" style="width:170px">
+        <option value="DISTANCE">Distance Snap</option>
+        <option value="RAINDROP" SELECTED>Raindrop Flow</option>
+        <option value="CATCONSTRAINED">Catchment Constrained</option>
+      </select>
+      <span style="font-family: Arial; font-size: 11px;">&nbsp;&nbsp;&nbsp; Max:</span>
+      <input name="pMaxDistance" type="text" class="text" id="dz_maxdistance" style="display:inline; width:30px" value="25" />
+      <span style="font-family: Arial; font-size: 11px;"> km
+        &nbsp; &nbsp; Rd Max: </span>
+      <input name="pRaindropMaxSnapDistance" type="text" class="text" id="pRaindropMaxSnapDistance" style="display:inline; width:30px" value="0.75" />
+      <span style="font-family: Arial; font-size: 11px;"> km</span>
+      <br/>
+      <br/>
+      <span style="font-family: Arial; font-size: 11px;">FCodes to Allow: </span><input name="pFCodeAllow" type="text" class="text" id="pFCodeAllow" style="display:inline; width:180px" />
+      <br/>
+      <span style="font-family: Arial; font-size: 11px;">FCodes to Deny: </span><input name="pFCodeDeny" type="text" class="text" id="pFCodeDeny" style="display:inline; width:180px" />
+      <br/>
+      <br/>
+      <input name="pLimitInNetwork" id="pLimitInNetwork" type="checkbox" CHECKED>
+      <span style="font-family: Arial; font-size: 11px;">Limit to InNetwork&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input name="pLimitNavigable" id="pLimitNavigable" type="checkbox">
+      <span style="font-family: Arial; font-size: 11px;">Limit to Navigable</span>
+      <br/>
+      <input name="pUseSimplifiedCatchments" id="pUseSimplifiedCatchments" type="checkbox">
+      <span style="font-family: Arial; font-size: 11px;">Use Simplified Catchments</span>
+      <br/>
+      <br/>
+      <input type="button" onclick="run_service();" value="Start Search" id="dz_run_service" />&nbsp;
+      <input type="button" onclick="dz_clear();" value="Clear" name="dz_clear" id="dz_clear" />&nbsp;
+      <input type="button" onclick="run_random_point();" value="Random" name="dz_random" id="dz_random" />&nbsp;
+      <select name="randomy" id="randomy" style="font-size: 9px;">
+        <option value="ALL" SELECTED>Random All</option>
+        <option value="CONUS" >Contiguous US</option>
+        <option value="HAWAII">Hawaii</option>
+        <option value="PRVI"  >Puerto Rico / VI</option>
+        <option value="GUMP"  >Guam / Marianas</option>
+        <option value="AS"    >American Samoa</option>
+      </select>
+    </div>
+    <div id="output" style="text-align: center"></div>
+  </div>
+</div>
+  <script src='http://unpkg.com/leaflet@1.3.1'></script>
+<script src='http://unpkg.com/esri-leaflet@2.1.4'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/leaflet-omnivore/0.3.4/leaflet-omnivore.min.js'></script>
+
+  
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>

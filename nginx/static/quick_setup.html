@@ -12,20 +12,34 @@
          var protocol = window.location.protocol;
          var hostname = window.location.hostname;
       
-         document.getElementById("download").href   = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Download_NHDPlus_Data.ipynb";
-         document.getElementById("pg_restore").href = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Load_NHDPlus_Database.ipynb";
-         document.getElementById("geoserver").href  = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Setup_Geoserver_Services.ipynb";
-         document.getElementById("nav_del1").href   = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-drainage-area-delineation-v3/index.html";
+         document.getElementById("jndownload").href  = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Download_NHDPlus_Data.ipynb";
+         document.getElementById("jnrestore").href   = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Load_NHDPlus_Database.ipynb";
+         document.getElementById("jngeosetup").href  = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Setup_Geoserver_Services.ipynb";
+         document.getElementById("pointindx").href   = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-point-indexing-service/index.html";
+         document.getElementById("navigation").href  = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-navigation-v3/index.html";
+         document.getElementById("delineation").href = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-drainage-area-delineation-v3/index.html";
+         document.getElementById("geoserver").href   = protocol + "//" + hostname + ":" + gs_port + "/geoserver/web";
       }
    </script>
    <body onload="set_href();">
       <p>&nbsp;</p>
       <ol>
-         <li>Download the WATERS pg dumps using <a id="download" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
-         <li>Load the WATERS pg dumps into PostgreSQL using <a id="pg_restore" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
-         <li>Setup the Geoserver services using <a id="geoserver" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
-         <li>Test WATERS Services via PostgREST using <a id="nav_del1" href="#" target="_blank">this example</a>.
+         <li>Download the WATERS pg dumps using <a id="jndownload" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
+         <li>Load the WATERS pg dumps into PostgreSQL using <a id="jnrestore" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
+         <li>Setup the Geoserver services using <a id="jngeosetup" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
+         <li>Test WATERS Services via PostgREST.</li>
       </ol>
+      <p>
+      PostgREST Services
+      </p>
+      <ol>
+         <li><a id="pointindx"   href="#" target="_blank">Point Indexing</a></br>&nbsp;</li>
+         <li><a id="navigation"  href="#" target="_blank">Network Navigation</a></br>&nbsp;</li>
+         <li><a id="delineation" href="#" target="_blank">Drainage Area Delineation</a></li>
+      </ol>
+      <p>
+      Geoserver <a id="geoserver" href="#" target="_blank">Administration Page</a>
+      </p>
       <p>
       Much more work to be done, feedback welcome.
       </p>

@@ -163,24 +163,24 @@ function onEachFeature_basins(feature, layer) {
   }
 }
 function onEachFeature_streams(feature, layer) {
-  if (feature.properties && feature.properties.ComID) {
+  if (feature.properties && feature.properties.comid) {
     layer.bindPopup(
       "<B>Returned Stream</B><BR/>" + 
-      "Perm ID: " + feature.properties.Permanent_Identifier + "<BR/>" +
-      "ComID: " + feature.properties.ComID.toString() + "<BR/>" +    
-      "Reach Code: " + feature.properties.ReachCode + "<BR/>" +    
-      "FMeasure: " + feature.properties.FMeasure.toString() + "<BR/>" +    
-      "TMeasure: " + feature.properties.TMeasure.toString() + "<BR/>" +    
-      "GNIS Name: " + feature.properties.GNIS_Name + "<BR/>"  
+      "Perm ID: " + feature.properties.permanent_identifier + "<BR/>" +
+      "ComID: " + feature.properties.comid.toString() + "<BR/>" +    
+      "Reach Code: " + feature.properties.reachcode + "<BR/>" +    
+      "FMeasure: " + feature.properties.fmeasure.toString() + "<BR/>" +    
+      "TMeasure: " + feature.properties.tmeasure.toString() + "<BR/>" +    
+      "GNIS Name: " + feature.properties.gnis_name + "<BR/>"  
     );
   }
 }
 function onEachFeature_catchments(feature, layer) {
-  if (feature.properties && feature.properties.FeatureID) {
+  if (feature.properties && feature.properties.featureid) {
     layer.bindPopup(
       "<B>Returned Catchment</B><BR/>" + 
-      "FeatureID: " + feature.properties.FeatureID.toString() + "<BR/>" +
-      "Area (SqKm): " + feature.properties.AreaSqKm.toString()             
+      "FeatureID: " + feature.properties.featureid.toString() + "<BR/>" +
+      "Area (SqKm): " + feature.properties.areasqkm.toString()             
     );
   }
 }
