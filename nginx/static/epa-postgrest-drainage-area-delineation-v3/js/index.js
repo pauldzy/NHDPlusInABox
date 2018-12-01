@@ -5,15 +5,19 @@ var feature_type;
 var split_check = true;
 var snapline,basins,catchments,streams;
 
-var drainage_delineation_url =
-  "https://inlandwaters.geoplatform.gov/waterspg/rpc/drainage_area_delineation_v3";
-var random_point_url =
-  "https://inlandwaters.geoplatform.gov/waterspg/rpc/random_point";
+var pr_port = "3000";
+var gs_port = "8080";
+
+var rpc_stem = window.location.protocol + "//" + window.location.hostname + ":" + pr_port + "/waterspg/rpc";
+var geo_stem = window.location.protocol + "//" + window.location.hostname + ":" + gs_port + "/geoserver";
+
+var drainage_delineation_url = rpc_stem + "/drainage_area_delineation_v3";
+var random_point_url         = rpc_stem + "/random_point";
 
 document.getElementById("dz_run_service").disabled = true;
 document.getElementById("busy").style.visibility = "hidden";
 
-var map = L.map("map").setView([38.88343, -77.035271], 13);
+var map = L.map("map").setView([46.874626,-96.782341],13);
 mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -21,30 +25,12 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 18
 }).addTo(map);
 
-var dynl = [
-  {
-    id: 1,
-    source: { type: "mapLayer", mapLayerId: 2 },
-    drawingInfo: {
-      renderer: {
-        type: "simple",
-        symbol: {
-          type: "esriSLS",
-          style: "esriSLSSolid",
-          color: [0, 0, 190, 170],
-          width: 1.5
-        }
-      }
-    }
-  }
-];
-
-flowlines_ms = L.esri.dynamicMapLayer({
-  url:
-    "https://inlandwaters.geoplatform.gov/arcgis/rest/services/NHDPlus/NHDPlus/MapServer/",
-  position: "back",
-  dynamicLayers: dynl
-});
+flowlines_ms = L.tileLayer.wms(
+    geo_stem + "/ows?"
+   ,{
+      layers: "nhdplus:nhdflowline_np21"
+   }
+);
 flowlines_ms.addTo(map);
 
 flowlines_ms.bindPopup(function (error, featureCollection) {
@@ -52,75 +38,29 @@ flowlines_ms.bindPopup(function (error, featureCollection) {
       return false;
     } else {
       return '<B>NHDPlus Flowline</B><BR/>'+ 
-        'ComID: ' + featureCollection.features[0].properties.ComID.toString() + '<BR/>' + 
-        'Perm ID: ' + featureCollection.features[0].properties.Permanent_Identifier + '<BR/>' + 
-        'Reach Code: ' + featureCollection.features[0].properties.ReachCode + '<BR/>' + 
-        'Hydro Seq: ' + featureCollection.features[0].properties.HydroSeq.toString() + '<BR/>' + 
-        'FMeasure: ' + featureCollection.features[0].properties.FMeasure.toString() + '<BR/>' + 
-        'TMeasure: ' + featureCollection.features[0].properties.TMeasure.toString() + '<BR/>' + 
-        'FCode: ' + featureCollection.features[0].properties.FCode.toString() + '<BR/>';
+        'ComID: ' + featureCollection.features[0].properties.comid.toString() + '<BR/>' + 
+        'Perm ID: ' + featureCollection.features[0].properties.permanent_identifier + '<BR/>' + 
+        'Reach Code: ' + featureCollection.features[0].properties.reachcode + '<BR/>' + 
+        'Hydro Seq: ' + featureCollection.features[0].properties.hydroseq.toString() + '<BR/>' + 
+        'FMeasure: ' + featureCollection.features[0].properties.fmeasure.toString() + '<BR/>' + 
+        'TMeasure: ' + featureCollection.features[0].properties.tmeasure.toString() + '<BR/>' + 
+        'FCode: ' + featureCollection.features[0].properties.fcode.toString() + '<BR/>';
     }
   });
 
-var dyn41 = [
-  {
-    id: 2,
-    source: { type: "mapLayer", mapLayerId: 41 },
-    drawingInfo: {
-      renderer: {
-        type: "simple",
-        symbol: {
-          type: "esriSFS",
-          style: "esriSFSSolid",
-          color: [0, 0, 0, 0],
-          outline: {
-            type: "esriSLS",
-            style: "esriSLSSolid",
-            color: [230, 112, 0, 255],
-            width: 1.5
-          }
-        }
-      }
-    }
-  }
-];
+catchmentsp_ms = L.tileLayer.wms(
+    geo_stem + "/ows?"
+   ,{
+      layers: "nhdplus:catchmentsp_np21"
+   }
+);
 
-catchmentsp_ms = L.esri.dynamicMapLayer({
-  url:
-    "https://inlandwaters.geoplatform.gov/arcgis/rest/services/OWOTHER/WATERS_GeoViewer/MapServer/",
-  position: "back",
-  dynamicLayers: dyn41
-});
-
-var dyn42 = [
-  {
-    id: 2,
-    source: { type: "mapLayer", mapLayerId: 42 },
-    drawingInfo: {
-      renderer: {
-        type: "simple",
-        symbol: {
-          type: "esriSFS",
-          style: "esriSFSSolid",
-          color: [0, 0, 0, 0],
-          outline: {
-            type: "esriSLS",
-            style: "esriSLSSolid",
-            color: [230, 112, 0, 255],
-            width: 1.5
-          }
-        }
-      }
-    }
-  }
-];
-
-catchment_ms = L.esri.dynamicMapLayer({
-  url:
-    "https://inlandwaters.geoplatform.gov/arcgis/rest/services/OWOTHER/WATERS_GeoViewer/MapServer/",
-  position: "back",
-  dynamicLayers: dyn42
-});
+catchment_ms = L.tileLayer.wms(
+    geo_stem + "/ows?"
+   ,{
+      layers: "nhdplus:catchment_np21"
+   }
+);
 
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);

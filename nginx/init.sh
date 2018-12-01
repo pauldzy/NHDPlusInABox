@@ -7,9 +7,9 @@ else
 fi
  
 if [ -z "${POSTGREST_PORT}" ]; then
-   pg_port="3000";
+   pr_port="3000";
 else
-   pg_port=${POSTGREST_PORT}
+   pr_port=${POSTGREST_PORT}
 fi
    
 if [ -z "${JUPYTER_PORT}" ]; then
@@ -17,47 +17,24 @@ if [ -z "${JUPYTER_PORT}" ]; then
 else
    jp_port=${JUPYTER_PORT} 
 fi
+
+if [ -z "${GEOSERVER_PORT}" ]; then
+   gs_port="8080";
+else
+   gs_port=${GEOSERVER_PORT} 
+fi
    
-find /src/static -name '*.js' | while read filename
+find /src/static -name '*.js' -and -name '*.html' | while read filename
 do
-   sed -i \
-   -e "s|\"https://inlandwaters.geoplatform.gov/waterspg/|window.location.protocol + \"//\" + window.location.hostname + \":${POSTGREST_PORT}/|g" \
-   -e "s|setView([38.88343, -77.035271], 13)|setView([46.874626, -96.782341], 13)|g" \
-   $filename
+   sed -i                                                          \
+      -e "s|var ng_port = \"8081\"|var ng_port = \"${ng_port}\"|g" \
+      -e "s|var pr_port = \"3000\"|var pr_port = \"${pr_port}\"|g" \
+      -e "s|var jp_port = \"8888\"|var jp_port = \"${jp_port}\"|g" \
+      -e "s|var gs_port = \"8080\"|var gs_port = \"${gs_port}\"|g" \
+      $filename
 
 done
 
-if [ "${JUPYTER_PORT}" != "8888" ]; then
-   find /src/static -name '*.html' | while read filename
-   do
-      sed -i \
-      -e "s|var jp_port = \"8888\"|var jp_port = \"${JUPYTER_PORT}\"|g" \
-      $filename
-      
-   done
-   
-fi
 
-if [ "${NGINX_PORT}" != "8081" ]; then
-   find /src/static -name '*.html' | while read filename
-   do
-      sed -i \
-      -e "s|var ng_port = \"8081\"|var ng_port = \"${NGINX_PORT}\"|g" \
-      $filename
-      
-   done
-   
-fi
-
-if [ "${GEOSERVER_PORT}" != "8080" ]; then
-   find /src/static -name '*.html' | while read filename
-   do
-      sed -i \
-      -e "s|var gs_port = \"8080\"|var gs_port = \"${GEOSERVER_PORT}\"|g" \
-      $filename
-      
-   done
-   
-fi
 
 exit 0;
