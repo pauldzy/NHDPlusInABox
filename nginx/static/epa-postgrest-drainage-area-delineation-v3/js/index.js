@@ -17,7 +17,7 @@ var random_point_url         = rpc_stem + "/random_point";
 document.getElementById("dz_run_service").disabled = true;
 document.getElementById("busy").style.visibility = "hidden";
 
-var map = L.map("map").setView([46.874626,-96.782341],13);
+var map = L.map("map").setView([46.874626,-96.782341],12);
 mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -28,7 +28,9 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 flowlines_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
-      layers: "nhdplus:nhdflowline_np21"
+       layers: "nhdplus:nhdflowline_np21"
+      ,transparency: 'true'
+      ,format: 'image/png',
    }
 );
 flowlines_ms.addTo(map);
@@ -51,14 +53,18 @@ flowlines_ms.bindPopup(function (error, featureCollection) {
 catchmentsp_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
-      layers: "nhdplus:catchmentsp_np21"
+       layers: "nhdplus:catchmentsp_np21"
+      ,transparency: 'true'
+      ,format: 'image/png',
    }
 );
 
 catchment_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
-      layers: "nhdplus:catchment_np21"
+       layers: "nhdplus:catchment_np21"
+      ,transparency: 'true'
+      ,format: 'image/png',
    }
 );
 

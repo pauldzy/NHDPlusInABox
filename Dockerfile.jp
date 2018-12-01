@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:latest
+FROM jupyter/scipy-notebook:14fdfbf9cfc1
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 

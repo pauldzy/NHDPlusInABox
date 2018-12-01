@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6.7
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
