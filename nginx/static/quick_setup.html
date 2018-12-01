@@ -14,6 +14,7 @@
       
          document.getElementById("download").href   = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Download_NHDPlus_Data.ipynb";
          document.getElementById("pg_restore").href = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Load_NHDPlus_Database.ipynb";
+         document.getElementById("geoserver").href  = protocol + "//" + hostname + ":" + jp_port + "/notebooks/Utilities/Setup_Geoserver_Services.ipynb";
          document.getElementById("nav_del1").href   = protocol + "//" + hostname + ":" + ng_port + "/static/epa-postgrest-drainage-area-delineation-v3/index.html";
       }
    </script>
@@ -22,7 +23,8 @@
       <ol>
          <li>Download the WATERS pg dumps using <a id="download" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
          <li>Load the WATERS pg dumps into PostgreSQL using <a id="pg_restore" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
-         <li>Test WATERS Services using <a id="nav_del1" href="#" target="_blank">this example</a>.
+         <li>Setup the Geoserver services using <a id="geoserver" href="#" target="_blank">this notebook</a>.</br>&nbsp;</li>
+         <li>Test WATERS Services via PostgREST using <a id="nav_del1" href="#" target="_blank">this example</a>.
       </ol>
       <p>
       Much more work to be done, feedback welcome.
