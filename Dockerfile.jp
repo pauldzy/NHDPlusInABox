@@ -44,8 +44,10 @@ RUN echo "c.NotebookApp.token    = u''" >> /opt/conda/etc/jupyter/jupyter_notebo
     chmod 755      /opt/conda/etc/jupyter/jupyter_notebook_config.py                         &&\
     chown $NB_USER /opt/conda/etc/jupyter/jupyter_notebook_config.py
 
-COPY /jupyter /home/jovyan
+COPY ./jupyter/notebooks /home/jovyan
 RUN  chown -R jovyan:users /home/jovyan
+
+COPY ./jupyter/notebook.json /opt/conda/etc/jupyter/nbconfig/notebook.json
 
 USER $NB_USER
 
