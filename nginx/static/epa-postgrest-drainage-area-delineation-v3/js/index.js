@@ -8,7 +8,7 @@ var snapline,basins,catchments,streams;
 var pr_port = "3000";
 var gs_port = "8080";
 
-var rpc_stem = window.location.protocol + "//" + window.location.hostname + ":" + pr_port + "/waterspg/rpc";
+var rpc_stem = window.location.protocol + "//" + window.location.hostname + ":" + pr_port + "/rpc";
 var geo_stem = window.location.protocol + "//" + window.location.hostname + ":" + gs_port + "/geoserver";
 
 var drainage_delineation_url = rpc_stem + "/drainage_area_delineation_v3";
@@ -29,7 +29,7 @@ flowlines_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
        layers: "nhdplus:nhdflowline_np21"
-      ,transparency: 'true'
+      ,transparent: 'true'
       ,format: 'image/png',
    }
 );
@@ -54,7 +54,7 @@ catchmentsp_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
        layers: "nhdplus:catchmentsp_np21"
-      ,transparency: 'true'
+      ,transparent: 'true'
       ,format: 'image/png',
    }
 );
@@ -63,7 +63,7 @@ catchment_ms = L.tileLayer.wms(
     geo_stem + "/ows?"
    ,{
        layers: "nhdplus:catchment_np21"
-      ,transparency: 'true'
+      ,transparent: 'true'
       ,format: 'image/png',
    }
 );
