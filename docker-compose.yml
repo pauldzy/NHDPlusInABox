@@ -13,6 +13,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.pg
+            shm_size: '2gb'
         hostname: dz_pg
         environment:
             POSTGRES_PASSWORD: *master_password
