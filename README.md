@@ -72,6 +72,6 @@ The base images utilized represent my best shot at providing useful functionalit
    PostgreSQL: postgres:10.6  
    Geoserver:  winsent/geoserver:2.13  
    PostgREST:  haskell:8.0.2  
-   Jupyter:    jupyter/scipy-notebook:14fdfbf9cfc1
+   Jupyter:    jupyter/scipy-notebook:14fdfbf9cfc1  
    Nginx:      python:3.6.7 
   
