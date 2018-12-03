@@ -1,2 +1,1 @@
-This directory contains exported datafiles feeding into jupyter or other consumers.
-This directory is wiped at each rebuild so save any products important to you before rebuilding.
+This directory is intended for exported datafiles which could be fed into jupyter or persisted for other purposes.
