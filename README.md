@@ -68,10 +68,10 @@ The loading_dock and workspace volume mounts are provided to persist large items
 
 The base images utilized represent my best shot at providing useful functionality.  The backend database container is a very solid choice I stand behind.  However the middleware containers may or may not be the best for your purposes.  Feedback is definately welcome to perhaps swap out to a better or more often-maintained image.
    
-
-   PostgreSQL: postgres:10.6  
-   Geoserver:  winsent/geoserver:2.13  
-   PostgREST:  haskell:8.0.2  
-   Jupyter:    jupyter/scipy-notebook:14fdfbf9cfc1  
-   Nginx:      python:3.6.7 
-  
+```
+   PostgreSQL:  postgres:10.6  
+   Geoserver:   winsent/geoserver:2.13  
+   PostgREST:   haskell:8.0.2  
+   Jupyter:     jupyter/scipy-notebook:14fdfbf9cfc1  
+   Nginx/Flask: python:3.6.7 
+```
