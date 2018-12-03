@@ -19,6 +19,8 @@ This project provides NHDPlus as a PostgreSQL/PostGIS database further exposed v
 
 ## Usage
 
+The loading_dock and workspace bind mounts are intended to be accessible directly by the host.  If you are using Docker for Windows you will need to (allow shared drives)[https://docs.docker.com/docker-for-windows/#shared-drives] in your Docker Settings allowing the disk hosting the mounts (probably the git project location) to be shared.
+
 After inspecting the docker-compose.yml file, execute
 
 ```
