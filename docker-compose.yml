@@ -6,7 +6,6 @@ x-jupyter_port   : &jupyter_port    8888
 x-nginx_port     : &nginx_port      8081
 x-loading_dock   : &loading_dock    ./loading_dock
 x-workspace      : &workspace       ./workspace
-x-pgdata         : &pgdata          ./pgdata
 x-master_password: &master_password nhdplus
 services:
     dz_pg:

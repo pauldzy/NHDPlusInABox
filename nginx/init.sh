@@ -24,7 +24,7 @@ else
    gs_port=${GEOSERVER_PORT} 
 fi
    
-find /src/static -name '*.js' -and -name '*.html' | while read filename
+find /src/static -name '*.js' -or -name '*.html' | while read filename
 do
    sed -i                                                          \
       -e "s|var ng_port = \"8081\"|var ng_port = \"${ng_port}\"|g" \
