@@ -2,7 +2,7 @@ FROM winsent/geoserver:2.13
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
@@ -10,7 +10,8 @@ RUN apt-get update                             &&\
        ca-certificates                         &&\
     rm -rf /var/lib/apt/lists/*
     
-RUN apt-get update                             &&\
+RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
+    apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
        supervisor                                \
        dos2unix                                  \

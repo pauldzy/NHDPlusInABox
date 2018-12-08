@@ -2,15 +2,19 @@ FROM python:3.6.7
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
-RUN apt-get update && apt-get install -y    \
-       python3-dev                          \
-       python3-pip                          \
-       python3-psycopg2                     \
-       curl                                 \
-       dos2unix                             \
-       nginx                                \
-       supervisor                           \
-       vim                                &&\ 
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
+    apt-get update                             &&\
+    apt-get install -y --no-install-recommends   \
+       python3-dev                               \
+       python3-pip                               \
+       python3-psycopg2                          \
+       curl                                      \
+       dos2unix                                  \
+       nginx                                     \
+       supervisor                                \
+       vim                                     &&\ 
     rm -rf /var/lib/apt/lists/*
 
 RUN  rm /etc/nginx/sites-enabled/default

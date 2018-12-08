@@ -2,28 +2,30 @@ FROM postgres:10.6
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
-   apt-get install -y --no-install-recommends       \
-      apt-utils                                     \
-      ca-certificates                             &&\
-   rm -rf /var/lib/apt/lists/*
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update                                 &&\
+    apt-get install -y --no-install-recommends       \
+       apt-utils                                     \
+       ca-certificates                             &&\
+    rm -rf /var/lib/apt/lists/*
    
-RUN DEBIAN_FRONTEND=noninteractive apt-get update &&\
-   apt-get install -y --no-install-recommends       \
-      libaio1                                       \
-      build-essential                               \
-      wget                                          \
-      dos2unix                                      \
-      postgresql-10-postgis-2.5                     \
-      postgresql-10-postgis-2.5-scripts             \
-      postgresql-10-pgrouting*                      \
-      postgresql-server-dev-10                      \
-      openssh-client                                \
-      sshpass                                       \
-      parallel                                      \
-      unzip                                         \
-      vim                                         &&\ 
-   rm -rf /var/lib/apt/lists/*
+RUN apt-get update                                 &&\
+    apt-get install -y --no-install-recommends -o=Dpkg::Use-Pty=0 \
+       libaio1                                       \
+       build-essential                               \
+       wget                                          \
+       dos2unix                                      \
+       postgresql-10-postgis-2.5                     \
+       postgresql-10-postgis-2.5-scripts             \
+       postgresql-10-pgrouting*                      \
+       postgresql-server-dev-10                      \
+       openssh-client                                \
+       sshpass                                       \
+       parallel                                      \
+       unzip                                         \
+       vim                                         &&\ 
+    rm -rf /var/lib/apt/lists/*
     
 COPY ./postgresql/init-pg.sh /docker-entrypoint-initdb.d/init.sh
 RUN  dos2unix --quiet /docker-entrypoint-initdb.d/init.sh &&\

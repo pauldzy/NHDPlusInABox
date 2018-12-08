@@ -4,7 +4,7 @@ LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
 ENV POSTGREST_VERSION 5.1.0
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
@@ -12,8 +12,9 @@ RUN apt-get update                             &&\
        ca-certificates                         &&\
     rm -rf /var/lib/apt/lists/*
     
-RUN apt-get update                             &&\
-    apt-get install -y --no-install-recommends   \
+RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
+    apt-get update                             &&\
+    apt-get install -y --no-install-recommends -o=Dpkg::Use-Pty=0 \
        vim                                       \
        psmisc                                    \
        build-essential                           \
@@ -28,8 +29,8 @@ RUN apt-get update                             &&\
     rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp                                    &&\
-    wget -q --show-progress https://github.com/begriffs/pg_listen/archive/master.zip &&\
-    unzip master.zip                           &&\
+    wget -nv https://github.com/begriffs/pg_listen/archive/master.zip &&\
+    unzip -q master.zip                        &&\
     cd /tmp/pg_listen-master                   &&\
     make                                       &&\
     mv pg_listen /usr/bin                      &&\
@@ -37,8 +38,8 @@ RUN cd /tmp                                    &&\
     rm -Rf /tmp/pg_listen-master
     
 RUN cd /tmp                                    &&\
-    wget -q --show-progress https://github.com/PostgREST/postgrest/archive/v${POSTGREST_VERSION}.tar.gz &&\
-    tar -xvf v${POSTGREST_VERSION}.tar.gz
+    wget -nv https://github.com/PostgREST/postgrest/archive/v${POSTGREST_VERSION}.tar.gz &&\
+    tar -xf v${POSTGREST_VERSION}.tar.gz
 
 RUN cd /tmp/postgrest-${POSTGREST_VERSION}/src/PostgREST  &&\
     sed -i.bak -e 's/ActionInvoke{isReadOnly=True} -> HT.Read/ActionInvoke{isReadOnly=True} -> HT.Write/' App.hs
@@ -47,14 +48,13 @@ RUN cd /tmp/postgrest-${POSTGREST_VERSION}     &&\
     stack build                                  \
        --copy-bins                               \
        --local-bin-path /usr/local/bin           \
-       --prefetch                                \
-       --ghc-options="-j +RTS -A256m -RTS"     &&\
+       --verbosity info                        &&\
     rm -Rf /tmp/postgrest-${POSTGREST_VERSION}
        
 COPY ./postgrest/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
 
-ADD ./postgrest/postgrest.conf /etc/postgrest.conf
+COPY ./postgrest/postgrest.conf /etc/postgrest.conf
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
 
