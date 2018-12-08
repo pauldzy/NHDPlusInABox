@@ -19,18 +19,27 @@ This project provides NHDPlus as a PostgreSQL/PostGIS database further exposed v
 
 ## Usage
 
-The loading_dock and workspace bind mounts are intended to be accessible directly by the host.  If you are using Docker for Windows you will need to [allow shared drives](https://docs.docker.com/docker-for-windows/#shared-drives) in your Docker Settings allowing the disk hosting the mounts (probably your C: drive) to be shared.
-
 After inspecting the docker-compose.yml file, execute
-
 ```
-docker-compose build
+docker-compose build --parallel
 docker-compose up
 ```
 
 A full build can take 20 to 30 minutes to download and compile.  Build output is left verbose to help provide feedback that the process is ongoing.
 
-When all five containers are up, then open the default setup page, mostly probably at http://localhost:8081 for information on how to download and install the NHDPlus datasets.
+When all five containers are up, then open the default setup page, mostly probably at http://localhost:8081 for information on how to download, install and consume the NHDPlus dataset.
+
+To shut down the containers either CTRL-C the process or in a separate session execute
+```
+docker-compose down
+```
+If you wish to destroy the containers add a "-v" to the down command which will delete the containers, volumes and networks. 
+
+### Windows Usage
+
+The loading_dock and workspace bind mounts are intended to be accessible directly by the host.  Windows users will need to expressly [allow shared drives](https://docs.docker.com/docker-for-windows/#shared-drives) via Docker Settings allowing the disk hosting the mounts (probably your C: drive) to be shared.
+
+Testing on various Windows machine shows that a minimum of 2048 meg of swap space is required.  Windows users will need to [adjust memory settings](https://docs.docker.com/docker-for-windows/#advanced) via Docker Settings bumping up at least the default swap value.  In my testing I have been using and now suggest 4096MB of memory and 2048MB of swap.  However note the more resources Docker is allowed to consume the more effect it will have on your host system.    
 
 ## Notes
 
