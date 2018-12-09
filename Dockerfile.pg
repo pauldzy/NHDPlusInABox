@@ -4,41 +4,40 @@ LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update                                 &&\
-    apt-get install -y --no-install-recommends       \
-       apt-utils                                     \
-       ca-certificates                             &&\
+RUN apt-get update                                       &&\
+    apt-get install -y --no-install-recommends             \
+       apt-utils                                           \
+       ca-certificates                                   &&\
     rm -rf /var/lib/apt/lists/*
    
-RUN apt-get update                                 &&\
+RUN apt-get update                                       &&\
     apt-get install -y --no-install-recommends -o=Dpkg::Use-Pty=0 \
-       libaio1                                       \
-       build-essential                               \
-       wget                                          \
-       dos2unix                                      \
-       postgresql-10-postgis-2.5                     \
-       postgresql-10-postgis-2.5-scripts             \
-       postgresql-10-pgrouting*                      \
-       postgresql-server-dev-10                      \
-       openssh-client                                \
-       sshpass                                       \
-       parallel                                      \
-       unzip                                         \
-       vim                                         &&\ 
+       libaio1                                             \
+       build-essential                                     \
+       wget                                                \
+       dos2unix                                            \
+       postgresql-10-postgis-2.5                           \
+       postgresql-10-postgis-2.5-scripts                   \
+       postgresql-10-pgrouting*                            \
+       postgresql-server-dev-10                            \
+       openssh-client                                      \
+       sshpass                                             \
+       parallel                                            \
+       unzip                                               \
+       vim                                               &&\ 
     rm -rf /var/lib/apt/lists/*
     
 COPY ./postgresql/init-pg.sh /docker-entrypoint-initdb.d/init.sh
-RUN  dos2unix --quiet /docker-entrypoint-initdb.d/init.sh &&\
-     chmod 755 /docker-entrypoint-initdb.d/init.sh
-
-RUN mkdir -p /home/postgres/.ssh                  &&\
-    chown -R postgres:postgres /home/postgres     &&\
-    mkdir -p /loading_dock                        &&\
-    mkdir -p /pgdata                              &&\
-    mkdir -p /workspace                           &&\
-    mkdir -p /pgdata/nhdplus_data                 &&\
-    mkdir -p /pgdata/ow_ephemeral                 &&\
-    chown -R postgres:postgres /loading_dock      &&\
-    chown -R postgres:postgres /pgdata            &&\
-    chmod -R 777 /loading_dock /workspace         &&\
+RUN dos2unix --quiet /docker-entrypoint-initdb.d/init.sh &&\
+    chmod 755 /docker-entrypoint-initdb.d/init.sh        &&\
+    mkdir -p /home/postgres/.ssh                         &&\
+    chown -R postgres:postgres /home/postgres            &&\
+    mkdir -p /loading_dock                               &&\
+    mkdir -p /pgdata                                     &&\
+    mkdir -p /workspace                                  &&\
+    mkdir -p /pgdata/nhdplus_data                        &&\
+    mkdir -p /pgdata/ow_ephemeral                        &&\
+    chown -R postgres:postgres /loading_dock             &&\
+    chown -R postgres:postgres /pgdata                   &&\
+    chmod -R 777 /loading_dock /workspace                &&\
     chmod g+s /loading_dock /workspace
