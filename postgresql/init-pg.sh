@@ -8,6 +8,7 @@ mkdir -p /pgdata/nhdplus_data
 mkdir -p /pgdata/ow_ephemeral
 
 sed -i -e "s/^#listen_addresses =.*$/listen_addresses = '*'/" /var/lib/postgresql/data/postgresql.conf
+sed -i -e "s/^#log_destination = 'stderr'/log_destination = 'syslog'/" /var/lib/postgresql/data/postgresql.conf
 
 mem=`awk '/MemTotal/ {print $2}' /proc/meminfo`
 sed -i -e "s/^#wal_buffers = -1.*$/wal_buffers = 16MB/" /var/lib/postgresql/data/postgresql.conf

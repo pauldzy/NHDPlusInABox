@@ -47,7 +47,10 @@ RUN echo "c.NotebookApp.token    = u''" >> /opt/conda/etc/jupyter/jupyter_notebo
     chown $NB_USER /opt/conda/etc/jupyter/jupyter_notebook_config.py
 
 COPY ./jupyter/notebooks /home/jovyan
-RUN  chown -R jovyan:users /home/jovyan
+RUN  chown -R jovyan:users /home/jovyan                                                      &&\
+     touch /var/log/jupyter.log                                                              &&\
+     chown jovyan:users /var/log/jupyter.log                                                 &&\
+     sed -i -e "s| \$\*| \$\* 1> /var/log/jupyter.log|g" /usr/local/bin/start-notebook.sh
 
 COPY ./jupyter/notebook.json /opt/conda/etc/jupyter/nbconfig/notebook.json
 
@@ -72,4 +75,3 @@ RUN pip3 install    \
     shapely         \
     wget            \
     XlsxWriter
-
