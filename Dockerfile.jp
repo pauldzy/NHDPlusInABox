@@ -43,14 +43,12 @@ RUN apt-get update                           &&\
 # Remove this step or add a password if you require greater security
 RUN echo "c.NotebookApp.token    = u''" >> /opt/conda/etc/jupyter/jupyter_notebook_config.py &&\
     echo "c.NotebookApp.password = u''" >> /opt/conda/etc/jupyter/jupyter_notebook_config.py &&\
+    echo "c.Application.log_level = 'ERROR'" >> /opt/conda/etc/jupyter/jupyter_notebook_config.py &&\
     chmod 755      /opt/conda/etc/jupyter/jupyter_notebook_config.py                         &&\
     chown $NB_USER /opt/conda/etc/jupyter/jupyter_notebook_config.py
 
 COPY ./jupyter/notebooks /home/jovyan
-RUN  chown -R jovyan:users /home/jovyan                                                      &&\
-     touch /var/log/jupyter.log                                                              &&\
-     chown jovyan:users /var/log/jupyter.log                                                 &&\
-     sed -i -e "s| \$\*| \$\* 1> /var/log/jupyter.log|g" /usr/local/bin/start-notebook.sh
+RUN  chown -R jovyan:users /home/jovyan
 
 COPY ./jupyter/notebook.json /opt/conda/etc/jupyter/nbconfig/notebook.json
 
