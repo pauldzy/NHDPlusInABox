@@ -35,13 +35,7 @@ docker-compose down
 ```
 If you wish to destroy the containers add a "-v" to the down command which will delete the containers, volumes and networks. 
 
-### Windows Usage
-
-The loading_dock and workspace bind mounts are intended to be accessible directly by the host.  Windows users will need to expressly [allow shared drives](https://docs.docker.com/docker-for-windows/#shared-drives) via Docker Settings allowing the disk hosting the mounts (probably your C: drive) to be shared.
-
-The Windows Docker "disk image max size" value applies to both the container and docker volumes.  The default 62 gig size is not large enough to hold and process the full (unpruned) NHDPlus dataset.  This will need to be [adjusted upwards](https://docs.docker.com/docker-for-windows/#advanced).  I generally set mine to 512 gig for a comfortable buffer.  I am not sure of the exact minimum.  Feel free to try smaller sizes and send me the result.
-
-Testing on various Windows machine shows that a minimum of 2048 meg of swap space is required.  Windows users will need to [adjust memory settings](https://docs.docker.com/docker-for-windows/#advanced) via Docker Settings bumping up at least the default swap value.  In my testing I have been using and now suggest 4096MB of memory and 2048MB of swap.  However note the more resources Docker is allowed to consume the more effect it will have on your host system.  Allocating more memory will make everything go quicker.
+For more information on configuring Docker for Windows, see the [Windows Setup](/doc/windows.md).
 
 ## Notes
 
@@ -54,7 +48,7 @@ NHDPlus in WATERS is rather large - certainly not big data large - but large to 
 * loading_dock: 112 GB  
 * pgdata: 180 GB
 
-At least 300GB of free disk is needed to get the project up and running. 
+At least 400GB of free disk is needed to get the project up and running. 
 
 **Machine Requirements:**
    
