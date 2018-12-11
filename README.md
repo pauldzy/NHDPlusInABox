@@ -45,17 +45,18 @@ There are some challenges to this concept which may send you immediately away or
    
 NHDPlus in WATERS is rather large - certainly not big data large - but large to download to your government-provided laptop or personal computer.  If you do not have a workstation-type computer for this purpose, its worth considering if its a viable solution for you.  The official [NHDPlus download site](https://www.epa.gov/waterdata/get-data#NHDPlusV2Map) provides data in smaller region-based extracts that may suit your capabilities better.  One purpose of this project is to just give you everything circumventing the need to generate your own national aggregations and load them to a database.  So to host this project you will need a comfortable amount of free disk:
    
-* loading_dock: 112 GB  
-* pgdata: 180 GB
+* loading_dock: 110 GB  
+* images: 12 GB
+* pgdata: 243 GB
 
-At least 400GB of free disk is needed to get the project up and running. 
+At least 365GB of free disk is needed to get the project up and running. Analysis and aggregation database tasks can of course push this amount higher.  
 
 **Machine Requirements:**
    
 This project will spin up a database and four support servers.  If you are using an underpowered government laptop you may just not have the juice to result in a viable work environment.  One answer would be to remove unneeded servers from the docker-compose.yml file to prune things down or perhaps suffer the startup and then manually stop unneeded containers.
 
 * suggested processor minimum: 4
-* suggested memory minimum: 8GB
+* suggested memory minimum: 8 GB
 
 **Security Concerns:**
    
