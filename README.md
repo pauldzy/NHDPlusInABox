@@ -49,7 +49,9 @@ NHDPlus in WATERS is rather large - certainly not big data large - but large to 
 * images: 12 GB
 * pgdata: 243 GB
 
-At least 365GB of free disk is needed to get the project up and running. Analysis and aggregation database tasks can of course push this amount higher.  
+At least 365GB of free disk is needed to get the project up and running. Analysis and aggregation database tasks can of course push this amount higher. 
+
+If you do not have that amount of disk handy and/or are just interested in the project concept, I also provide a "pruned" NHDPlus dataset cut down to only NHDPlus VPU 09.  This abbreviated dataset only needs about 30 GB of disk space for Docker to stage.
 
 **Machine Requirements:**
    
