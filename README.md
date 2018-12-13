@@ -25,7 +25,7 @@ docker-compose build --parallel
 docker-compose up
 ```
 
-A full build can take 20 to 30 minutes to download and compile.  Build output is left verbose to help provide feedback that the process is ongoing.
+A full build from scratch will take 20 to 30 minutes to download and build depending on your internet speed and processor power.
 
 When all five containers are up, then open the default setup page, mostly probably at http://localhost:8081 for information on how to download, install and consume the NHDPlus dataset.
 
@@ -46,7 +46,7 @@ There are some challenges to this concept which may send you immediately away or
 NHDPlus in WATERS is rather large - certainly not big data large - but large to download to your government-provided laptop or personal computer.  If you do not have a workstation-type computer for this purpose, its worth considering if its a viable solution for you.  The official [NHDPlus download site](https://www.epa.gov/waterdata/get-data#NHDPlusV2Map) provides data in smaller region-based extracts that may suit your capabilities better.  One purpose of this project is to just give you everything circumventing the need to generate your own national aggregations and load them to a database.  So to host this project you will need a comfortable amount of free disk:
    
 * loading_dock: 110 GB  
-* images: 12 GB
+* images: 9 GB
 * pgdata: 243 GB
 
 At least 365GB of free disk is needed to get the project up and running. Your own analysis/aggregation database tasks or geoserver extracts can of course push this amount higher. 
