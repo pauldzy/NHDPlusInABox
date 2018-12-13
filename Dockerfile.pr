@@ -1,61 +1,20 @@
-FROM haskell:8.0.2
+FROM pauldzy/dzpostgrest
 
-LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
-
-ENV POSTGREST_VERSION 5.1.0
+LABEL maintainer="Paul Dziemiela <Paul@Dziemiela.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update                             &&\
-    apt-get install -y --no-install-recommends   \
-       apt-utils                                 \
-       ca-certificates                         &&\
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update                                     &&\
+    apt-get install -y --no-install-recommends           \
+       vim                                             &&\
+    rm -rf /var/lib/apt/lists/*     
     
-RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
-    apt-get update                             &&\
-    apt-get install -y --no-install-recommends -o=Dpkg::Use-Pty=0 \
-       vim                                       \
-       psmisc                                    \
-       build-essential                           \
-       dos2unix                                  \
-       pkg-config                                \
-       clang                                     \
-       zip                                       \
-       unzip                                     \
-       wget                                      \
-       supervisor                                \
-       libpq-dev                               &&\
-    rm -rf /var/lib/apt/lists/*
-
-RUN cd /tmp                                    &&\
-    wget -nv https://github.com/begriffs/pg_listen/archive/master.zip &&\
-    unzip -q master.zip                        &&\
-    cd /tmp/pg_listen-master                   &&\
-    make                                       &&\
-    mv pg_listen /usr/bin                      &&\
-    chmod 755 /usr/bin/pg_listen               &&\
-    rm -Rf /tmp/pg_listen-master
-    
-RUN cd /tmp                                    &&\
-    wget -nv https://github.com/PostgREST/postgrest/archive/v${POSTGREST_VERSION}.tar.gz &&\
-    tar -xf v${POSTGREST_VERSION}.tar.gz
-
-RUN cd /tmp/postgrest-${POSTGREST_VERSION}/src/PostgREST  &&\
-    sed -i.bak -e 's/ActionInvoke{isReadOnly=True} -> HT.Read/ActionInvoke{isReadOnly=True} -> HT.Write/' App.hs
-    
-RUN cd /tmp/postgrest-${POSTGREST_VERSION}     &&\
-    stack build                                  \
-       --copy-bins                               \
-       --local-bin-path /usr/local/bin           \
-       --verbosity info                        &&\
-    rm -Rf /tmp/postgrest-${POSTGREST_VERSION}
-       
 COPY ./postgrest/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
-
 COPY ./postgrest/postgrest.conf /etc/postgrest.conf
 
+RUN dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf &&\
+    dos2unix --quiet /etc/postgrest.conf
+    
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 3000
