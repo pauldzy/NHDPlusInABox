@@ -1,43 +1,8 @@
-FROM jupyter/scipy-notebook:14fdfbf9cfc1
+FROM pauldzy/dzjupytergeo:1.0.0
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
 USER root
-
-ARG DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update                           &&\
-    apt-get install -y --no-install-recommends \
-       python3.6                               \
-       python3.6-dev                           \
-       python3-numpy                           \
-       python3-gdal                            \
-       python3-pip                             \
-       python3-setuptools                      \
-       python3-libxml2                         \
-       gdal-bin                                \
-       sqlite3                                 \
-       binutils                                \
-       libcurl4-gnutls-dev                     \
-       libxml2-dev                             \
-       libproj-dev                             \
-       libgdal20                               \
-       libgdal-dev                             \ 
-       libgeos-dev                             \
-       libopenjp2-7-dev                        \
-       libpq-dev                               \
-       libjson-c-dev                           \
-       libxerces-c-dev                         \
-       libtiff-dev                             \
-       libjpeg-dev                             \
-       libkml-dev                              \
-       libsqlite3-dev                          \
-       libopenjp2-7-dev                        \
-       postgresql-client                       \
-       gettext                               &&\
-    apt-get clean                            &&\
-    rm -rf /var/lib/apt/lists/*              &&\
-    rm -rf /var/cache/apt/*
 
 # The following RUN statement essentially removes all security from the Jupyter notebook container
 # Remove this step or add a password if you require greater security
@@ -52,24 +17,5 @@ RUN  chown -R jovyan:users /home/jovyan
 
 COPY ./jupyter/notebook.json /opt/conda/etc/jupyter/nbconfig/notebook.json
 
-USER $NB_USER
+EXPOSE 8888
 
-RUN pip3 install wheel
-    
-RUN pip3 install gdal==$(gdal-config --version) --global-option=build_ext --global-option="-I/usr/include/gdal"
-
-RUN pip3 install    \
-    bonobo[jupyter] \
-    fiona           \
-    folium          \
-    geocoder        \
-    geopandas       \
-    geopy           \
-    googlemaps      \
-    psycopg2-binary \
-    pyproj          \
-    pysal           \
-    rtree           \
-    shapely         \
-    wget            \
-    XlsxWriter

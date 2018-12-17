@@ -17,36 +17,30 @@ RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
        vim                                     &&\ 
     rm -rf /var/lib/apt/lists/*
 
-RUN  rm /etc/nginx/sites-enabled/default
 COPY ./nginx/nginx-sites.conf /etc/nginx/sites-available/
-RUN  dos2unix --quiet /etc/nginx/sites-available/nginx-sites.conf
-
-RUN  ln -s /etc/nginx/sites-available/nginx-sites.conf /etc/nginx/sites-enabled/nginx-sites.conf
 COPY ./nginx/uwsgi.ini /var/www/app/
-RUN  dos2unix --quiet /var/www/app/uwsgi.ini
-
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf  &&\
-    mkdir -p /var/log/supervisor
-    
 COPY ./nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
-
-RUN pip3 install --upgrade pip
-
-RUN pip3 install     \
-   Flask             \
-   Flask-SQLAlchemy  \
-   Flask-Migrate     \
-   dicttoxml         \
-   psycopg2          \
-   uWSGI
-
-RUN mkdir -p /src/flask          &&\
-    mkdir -p /src/log
-
 COPY ./nginx /src
-RUN  dos2unix --quiet /src/init.sh &&\
-     chmod 755 /src/init.sh
+
+RUN rm /etc/nginx/sites-enabled/default                           &&\
+    dos2unix --quiet /etc/nginx/sites-available/nginx-sites.conf  &&\
+    ln -s /etc/nginx/sites-available/nginx-sites.conf /etc/nginx/sites-enabled/nginx-sites.conf &&\
+    dos2unix --quiet /var/www/app/uwsgi.ini                       &&\
+    echo "daemon off;" >> /etc/nginx/nginx.conf                   &&\
+    mkdir -p /var/log/supervisor                                  &&\
+    dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf      &&\
+    pip3 install --upgrade pip                                    &&\
+    pip3 install                                                    \
+     Flask                                                          \
+     Flask-SQLAlchemy                                               \
+     Flask-Migrate                                                  \
+     dicttoxml                                                      \
+     psycopg2                                                       \
+     uWSGI                                                        &&\
+    mkdir -p /src/flask                                           &&\
+    mkdir -p /src/log                                             &&\
+    dos2unix --quiet /src/init.sh                                 &&\
+    chmod 755 /src/init.sh
 
 EXPOSE 8081
 

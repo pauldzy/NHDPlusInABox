@@ -4,12 +4,6 @@ LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update                             &&\
-    apt-get install -y --no-install-recommends   \
-       apt-utils                                 \
-       ca-certificates                         &&\
-    rm -rf /var/lib/apt/lists/*
-    
 RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
     apt-get update                             &&\
     apt-get install -y --no-install-recommends   \
@@ -20,10 +14,10 @@ RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
     rm -rf /var/lib/apt/lists/*
 
 COPY ./geoserver/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf
-
 COPY ./geoserver/init.sh /src/init.sh
-RUN  dos2unix --quiet /src/init.sh &&\
+
+RUN  dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf   &&\
+     dos2unix --quiet /src/init.sh                              &&\
      chmod 755 /src/init.sh
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
