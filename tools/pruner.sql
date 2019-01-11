@@ -241,3 +241,5 @@ DELETE FROM nhdplus.cat_np21_conus_rdt WHERE NOT ST_INTERSECTS(rast,(SELECT ST_T
 DELETE FROM nhdplus.fdr_np21_conus_rdt WHERE NOT ST_INTERSECTS(rast,(SELECT ST_TRANSFORM(b.shape,5070) FROM nhdplus.wbd_hu2_np21 b WHERE b.huc_2 = '09'));
 DELETE FROM nhdplus.fac_np21_conus_rdt WHERE NOT ST_INTERSECTS(rast,(SELECT ST_TRANSFORM(b.shape,5070) FROM nhdplus.wbd_hu2_np21 b WHERE b.huc_2 = '09'));
 
+DELETE FROM nhdplus_watersheds.watershedsp a WHERE NOT EXISTS (SELECT 1 FROM nhdplus.catchmentsp_np21 b where b.nhdplus_region = '09' AND b.featureid = a.featureid);
+
