@@ -18,6 +18,7 @@ sed -i -e "s/^#checkpoint_completion_target = 0.5.*$/checkpoint_completion_targe
 
 echo "host    all    all    0.0.0.0/0    md5" >> /var/lib/postgresql/data/pg_hba.conf
 
+psql -c "CREATE USER dz_lrs               WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus              WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_delineation  WITH PASSWORD '${POSTGRES_PASSWORD}';"
 psql -c "CREATE USER nhdplus_navigation30 WITH PASSWORD '${POSTGRES_PASSWORD}';"
@@ -42,6 +43,7 @@ psql -c "CREATE EXTENSION postgis_topology;" nhdplus
 psql -c "CREATE EXTENSION pgrouting;" nhdplus
 
 psql -c "ALTER DATABASE nhdplus OWNER TO nhdplus;"
+psql -c "GRANT CREATE ON DATABASE nhdplus TO dz_lrs;"
 psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus;"
 psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_delineation;"
 psql -c "GRANT CREATE ON DATABASE nhdplus TO nhdplus_navigation30;"
