@@ -31,9 +31,14 @@ When all five containers are up, then open the default setup page, mostly probab
 
 To shut down the containers either CTRL-C the process or in a separate session execute
 ```
+docker-compose stop
+```
+
+If you wish to stop and also remove the containers execute
+```
 docker-compose down
 ```
-If you wish to destroy the containers add a "-v" to the down command which will delete the containers, volumes and networks. 
+Add a "-v" to the down command to also remove the associated volumes and networks. 
 
 For more information on configuring Docker for Windows, see the [Windows Setup](/doc/windows.md).
 
