@@ -27,11 +27,9 @@ RUN dos2unix --quiet /docker-entrypoint-initdb.d/init.sh &&\
     mkdir -p /home/postgres/.ssh                         &&\
     chown -R postgres:postgres /home/postgres            &&\
     mkdir -p /loading_dock                               &&\
-    mkdir -p /pgdata                                     &&\
+    mkdir -p /tblspdata                                  &&\
     mkdir -p /workspace                                  &&\
-    mkdir -p /pgdata/nhdplus_data                        &&\
-    mkdir -p /pgdata/ow_ephemeral                        &&\
     chown -R postgres:postgres /loading_dock             &&\
-    chown -R postgres:postgres /pgdata                   &&\
+    chown -R postgres:postgres /tblspdata                &&\
     chmod -R 777 /loading_dock /workspace                &&\
     chmod g+s /loading_dock /workspace

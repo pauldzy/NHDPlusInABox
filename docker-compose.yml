@@ -30,7 +30,10 @@ services:
               target: /workspace
             - type: volume
               source: pgdata
-              target: /pgdata
+              target: /var/lib/postgresql/data
+            - type: volume
+              source: tblspdata
+              target: /tblspdata
     dz_gs:
         build:
             context: .
@@ -50,6 +53,9 @@ services:
             - type: bind
               source: *workspace
               target: /workspace
+            - type: volume
+              source: geoserver-data
+              target: /opt/geoserver/data_dir
         depends_on:
             - dz_pg
     dz_pr:
@@ -90,6 +96,12 @@ services:
             - type: bind
               source: *workspace
               target: /workspace
+            - type: volume
+              source: jupyter
+              target: /opt/conda/etc/jupyter
+            - type: volume
+              source: home-jovyan
+              target: /home/jovyan
         depends_on:
             - dz_pg
     dz_ng:
@@ -123,4 +135,8 @@ networks:
     dz:
         driver: bridge
 volumes:
+    tblspdata:
     pgdata:
+    geoserver-data:
+    jupyter:
+    home-jovyan:

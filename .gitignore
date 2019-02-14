@@ -1,4 +1,4 @@
 
 loading_dock/*.dmp
-pgdata/nhdplus_data
-pgdata/ow_ephemeral
+workspace/*.gpkg
+workspace/*.tif
