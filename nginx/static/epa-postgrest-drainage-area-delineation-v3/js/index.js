@@ -227,34 +227,34 @@ function run_service() {
 
   // Load the parameters to pass to the service
   var data = {
-    pStartPoint: geojsonval,
-    pIndexingEngine: pmethod.options[pmethod.selectedIndex].value,
-    pDistanceMaxDistKm: document.getElementById("pMaxDistance").value,
-    pRaindropSnapMaxDistKm: document.getElementById("pRaindropMaxSnapDistance").value,
-    pRaindropPathMaxDistKm: document.getElementById("pMaxDistance").value,
-    pLimitInNetwork: "TRUE",
-    pLimitNavigable: "TRUE",
-    pFallbackMaxDistKm: document.getElementById("pMaxDistance").value,
-    pFallbackLimitInNetwork: "TRUE",
-    pFallbackLimitNavigable: "TRUE",
-    pReturnLinkPath: "TRUE",
-    pSearchType: search_type.options[search_type.selectedIndex].value,
-    pStartComID: comid,
-    pStartPermanentIdentifier: permid,
-    pStartReachCode: reachcode,
-    pStartHydroSequence: hydroseq,
-    pStartMeasure: measure,
-    pSearchMaxDistanceKm: max_nav,
-    pFeatureType: pfeaturetype.options[pfeaturetype.selectedIndex].value,
-    pOutputFlag: str_output_flag,
-    pShowSelectedStreams: str_return_streams,
-    pAggregationFlag: str_aggregation_flag,
-    pSplitInitialCatchment: boo_split,
-    pFillDrainageAreaHoles: boo_fill_holes
+    "pStartPoint": geojsonval,
+    "pIndexingEngine": pmethod.options[pmethod.selectedIndex].value,
+    "pDistanceMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pRaindropSnapMaxDistKm": document.getElementById("pRaindropMaxSnapDistance").value,
+    "pRaindropPathMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pLimitInNetwork": "TRUE",
+    "pLimitNavigable": "TRUE",
+    "pFallbackMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pFallbackLimitInNetwork": "TRUE",
+    "pFallbackLimitNavigable": "TRUE",
+    "pReturnLinkPath": "TRUE",
+    "pSearchType": search_type.options[search_type.selectedIndex].value,
+    "pStartComID": comid,
+    "pStartPermanentIdentifier": permid,
+    "pStartReachCode": reachcode,
+    "pStartHydroSequence": hydroseq,
+    "pStartMeasure": measure,
+    "pSearchMaxDistanceKm": max_nav,
+    "pFeatureType": pfeaturetype.options[pfeaturetype.selectedIndex].value,
+    "pOutputFlag": str_output_flag,
+    "pShowSelectedStreams": str_return_streams,
+    "pAggregationFlag": str_aggregation_flag,
+    "pSplitInitialCatchment": boo_split,
+    "pFillDrainageAreaHoles": boo_fill_holes
   };
 
-  // Use ESRI request module to call service via JSONP
   L.esri.get(drainage_delineation_url, data, srvresponse);
+  
 }
 
 function srvresponse(error, response, raw) {
@@ -265,8 +265,8 @@ function srvresponse(error, response, raw) {
   }
 
   if (
-    response[0] == null ||
-    response[0].Result_Delineated_Area == null
+    response == null ||
+    response.Result_Delineated_Area == null
   ) {
     document.getElementById("output").innerHTML = "<P>No results found.</P>";
     busy_off();
@@ -274,18 +274,18 @@ function srvresponse(error, response, raw) {
   }
   
   if (
-    response[0].Return_Code != 0
+    response.Return_Code != 0
   ) {
-    document.getElementById("output").innerHTML = "<P>" + response[0].Status_Message + "</P>";
+    document.getElementById("output").innerHTML = "<P>" + response.Status_Message + "</P>";
     busy_off();
     return false;
   }
 
   if (
-    response[0].Result_Link_Path != null
+    response.Result_Link_Path != null
   ) {
     snapline
-      .addData(response[0].Result_Link_Path)
+      .addData(response.Result_Link_Path)
       .setStyle({
         color: "#FF0000",
         fillColor: "#FF0000"
@@ -293,10 +293,10 @@ function srvresponse(error, response, raw) {
   }
   
    if (
-    response[0].Result_Streams_Selected != null
+    response.Result_Streams_Selected != null
   ) {
     streams
-      .addData(response[0].Result_Streams_Selected)
+      .addData(response.Result_Streams_Selected)
       .setStyle({
         color: "#FFFF00",
         fillColor: "#FFFF00"
@@ -304,17 +304,17 @@ function srvresponse(error, response, raw) {
   }
   
   if (
-    response[0].Result_Catchments_Selected != null
+    response.Result_Catchments_Selected != null
   ) {
     catchments
-      .addData(response[0].Result_Catchments_Selected)
+      .addData(response.Result_Catchments_Selected)
       .setStyle({
         color: "#FFFF00",
         fillColor: "#FFFF00"
       });
   }
 
-  basins.addData(response[0].Result_Delineated_Area);
+  basins.addData(response.Result_Delineated_Area);
   map.fitBounds(basins.getBounds());
   
   streams.bringToFront();
@@ -334,11 +334,11 @@ function run_random_point() {
   var randomy = document.getElementById("randomy");
 
   var data = {
-    pRegion: randomy.options[randomy.selectedIndex].value
+    "pRegion": randomy.options[randomy.selectedIndex].value
   };
 
-  // Use ESRI request module to call service via JSONP
   L.esri.get(random_point_url, data, rand_response);
+  
 }
 
 function rand_response(error, response) {
@@ -348,7 +348,7 @@ function rand_response(error, response) {
     return false;
   }
 
-  geojsonval = response[0];
+  geojsonval = response;
   drawnItems.clearLayers();
   var geofeature = L.geoJson({type:"Feature",geometry:geojsonval});
   drawnItems.addLayer(geofeature);

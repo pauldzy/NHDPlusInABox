@@ -250,69 +250,70 @@ function run_service() {
 
   // Load the parameters to pass to the service
   var data = {
-    pStartPoint: start_geojsonval,
-    pStopPoint: stop_geojsonval,
-    pIndexingEngine: index_engine.options[index_engine.selectedIndex].value,
-    pDistanceMaxDistKm: document.getElementById("pMaxDistance").value,
-    pRaindropSnapMaxDistKm: document.getElementById("pRaindropMaxSnapDistance")
+    "pStartPoint": start_geojsonval,
+    "pStopPoint": stop_geojsonval,
+    "pIndexingEngine": index_engine.options[index_engine.selectedIndex].value,
+    "pDistanceMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pRaindropSnapMaxDistKm": document.getElementById("pRaindropMaxSnapDistance")
       .value,
-    pRaindropPathMaxDistKm: document.getElementById("pMaxDistance").value,
-    pLimitInNetwork: "TRUE",
-    pLimitNavigable: "TRUE",
-    pFallbackMaxDistKm: document.getElementById("pMaxDistance").value,
-    pFallbackLimitInNetwork: "TRUE",
-    pFallbackLimitNavigable: "TRUE",
-    pReturnLinkPath: "TRUE",
-    pSearchType: search_type.options[search_type.selectedIndex].value,
-    pStartComID: document.getElementById("pStartComID").value,
-    pStartPermanentIdentifier: document.getElementById(
+    "pRaindropPathMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pLimitInNetwork": "TRUE",
+    "pLimitNavigable": "TRUE",
+    "pFallbackMaxDistKm": document.getElementById("pMaxDistance").value,
+    "pFallbackLimitInNetwork": "TRUE",
+    "pFallbackLimitNavigable": "TRUE",
+    "pReturnLinkPath": "TRUE",
+    "pSearchType": search_type.options[search_type.selectedIndex].value,
+    "pStartComID": document.getElementById("pStartComID").value,
+    "pStartPermanentIdentifier": document.getElementById(
       "pStartPermanentIdentifier"
     ).value,
-    pStartReachCode: document.getElementById("pStartReachCode").value,
-    pStartHydroSequence: document.getElementById("pStartHydroSequence").value,
-    pStartMeasure: document.getElementById("pStartMeasure").value,
-    pStopComID: document.getElementById("pStopComID").value,
-    pStopPermanentIdentifier: document.getElementById(
+    "pStartReachCode": document.getElementById("pStartReachCode").value,
+    "pStartHydroSequence": document.getElementById("pStartHydroSequence").value,
+    "pStartMeasure": document.getElementById("pStartMeasure").value,
+    "pStopComID": document.getElementById("pStopComID").value,
+    "pStopPermanentIdentifier": document.getElementById(
       "pStopPermanentIdentifier"
     ).value,
-    pStopReachCode: document.getElementById("pStopReachCode").value,
-    pStopHydroSequence: document.getElementById("pStopHydroSequence").value,
-    pStopMeasure: document.getElementById("pStopMeasure").value,
-    pSearchMaxDistanceKm: document.getElementById("pSearchMaxDistanceKm").value
+    "pStopReachCode": document.getElementById("pStopReachCode").value,
+    "pStopHydroSequence": document.getElementById("pStopHydroSequence").value,
+    "pStopMeasure": document.getElementById("pStopMeasure").value,
+    "pSearchMaxDistanceKm": document.getElementById("pSearchMaxDistanceKm").value
   };
 
   L.esri.get(navigation_url,data,navresponse);
+  
 }
 
 function navresponse(error, response) {
   if (error) {
     document.getElementById("output").innerHTML = "<P>" + error + "</P>";
-  } else if (response[0] == null) {
-    if (response[0].Result_Link_Path != null) {
-      snapline.addData(response[0].Result_Link_Path).setStyle({
+  } else if (response == null) {
+    if (response.Result_Link_Path != null) {
+      snapline.addData(response.Result_Link_Path).setStyle({
         color: "#FFA500",
         fillColor: "#FFA500"
       });
     }
     document.getElementById("output").innerHTML = "<P>No results found.</P>";
-  } else if (response[0].Return_Code != 0) {
-    if (response[0].Result_Link_Path != null) {
-      snapline.addData(response[0].Result_Link_Path).setStyle({
+  } else if (response.Return_Code != 0) {
+    if (response.Result_Link_Path != null) {
+      snapline.addData(response.Result_Link_Path).setStyle({
         color: "#FFA500",
         fillColor: "#FFA500"
       });
     }
-    document.getElementById("output").innerHTML = "<P>" + response[0].Status_Message + "</P>";
+    document.getElementById("output").innerHTML = "<P>" + response.Status_Message + "</P>";
   } else {
-    if (response[0].Result_Link_Path != null) {
-      snapline.addData(response[0].Result_Link_Path).setStyle({
+    if (response.Result_Link_Path != null) {
+      snapline.addData(response.Result_Link_Path).setStyle({
         color: "#FFA500",
         fillColor: "#FFA500"
       });
     }
 
-    if (response[0].Result_Streams_Selected != null) {
-      streams.addData(response[0].Result_Streams_Selected).setStyle({
+    if (response.Result_Streams_Selected != null) {
+      streams.addData(response.Result_Streams_Selected).setStyle({
         color: "#FFFF00",
         fillColor: "#FFFF00"
       });
@@ -343,7 +344,7 @@ function rand_response(error, response) {
     return false;
   }
 
-  start_geojsonval = response[0];
+  start_geojsonval = response;
   drawnItems.clearLayers();
   var geofeature = L.geoJson({ type: "Feature", geometry: start_geojsonval });
   drawnItems.addLayer(geofeature);

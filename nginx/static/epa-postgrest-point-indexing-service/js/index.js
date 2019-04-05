@@ -143,6 +143,7 @@ function run_service() {
   };
   
   L.esri.get(point_index_url, data, ptresponse);
+  
 }
 
 function ptresponse(error, response) {
@@ -153,7 +154,7 @@ function ptresponse(error, response) {
     return false;
   }
   
-  var srv_rez = response[0];
+  var srv_rez = response;
 
   if (srv_rez == null || srv_rez.Output_Flowlines == null || srv_rez.Return_Code != 0) {
     if (srv_rez.Return_Code !== null) {
@@ -216,12 +217,12 @@ function run_random_point() {
     "pRegion": randomy.options[randomy.selectedIndex].value
   };
 
-  // Use ESRI request module to call service via JSONP
   L.esri.get(
     random_point_url, 
     data, 
     rand_response
   );
+  
 }
 
 function rand_response(error, response) {
@@ -231,7 +232,7 @@ function rand_response(error, response) {
     return false;
   }
 
-  geojsonval = response[0];
+  geojsonval = response;
   drawnItems.clearLayers();
   drawnItems.addLayer(
      L.geoJson({"type":"Feature", "geometry":geojsonval})
