@@ -6,7 +6,7 @@ var gs_port = "8080";
 var rpc_stem = window.location.protocol + "//" + window.location.hostname + ":" + pr_port + "/rpc";
 var geo_stem = window.location.protocol + "//" + window.location.hostname + ":" + gs_port + "/geoserver";
 
-var point_index_url  = rpc_stem + "/point_index";
+var point_index_url  = rpc_stem + "/pointindexing_v2";
 var random_point_url = rpc_stem + "/random_point";
 
 document.getElementById("dz_run_service").disabled = true;

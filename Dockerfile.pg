@@ -1,4 +1,4 @@
-FROM postgres:10.6
+FROM postgres:11.2
 
 LABEL maintainer="Paul Dziemiela <Paul.Dziemiela@erg.com>"
 
@@ -10,10 +10,10 @@ RUN apt-get update                                       &&\
        build-essential                                     \
        wget                                                \
        dos2unix                                            \
-       postgresql-10-postgis-2.5                           \
-       postgresql-10-postgis-2.5-scripts                   \
-       postgresql-10-pgrouting*                            \
-       postgresql-server-dev-10                            \
+       postgresql-11-postgis-2.5                           \
+       postgresql-11-postgis-2.5-scripts                   \
+       postgresql-11-pgrouting*                            \
+       postgresql-server-dev-11                            \
        openssh-client                                      \
        sshpass                                             \
        parallel                                            \
