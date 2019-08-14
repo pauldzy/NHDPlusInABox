@@ -63,6 +63,9 @@ else
    psql -c "CREATE SCHEMA waterspg AUTHORIZATION waterspg;" nhdplus
    psql -c "ALTER SCHEMA waterspg OWNER TO waterspg;" nhdplus
    psql -c "ALTER SCHEMA topology OWNER TO nhdplus_toponet;" nhdplus
+   
+   psql -c "CREATE FUNCTION public.notify_ddl_postgrest() RETURNS event_trigger AS \$\$ BEGIN NOTIFY ddl_command_end; END; \$\$  LANGUAGE 'plpgsql';" nhdplus
+   psql -c "CREATE EVENT TRIGGER ddl_postgrest ON ddl_command_end EXECUTE PROCEDURE public.notify_ddl_postgrest();" nhdplus
 
    psql -c "CREATE FUNCTION waterspg.test() RETURNS JSON AS \$\$ BEGIN RETURN json_object_agg('works',TRUE); END; \$\$ LANGUAGE 'plpgsql';" nhdplus
    psql -c "ALTER FUNCTION waterspg.test() OWNER TO waterspg;" nhdplus

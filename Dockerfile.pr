@@ -1,4 +1,4 @@
-FROM pauldzy/dzpostgrest:5.2.0
+FROM pauldzy/dzpostgrest:6.0.1
 
 LABEL maintainer="Paul Dziemiela <Paul@Dziemiela.com>"
 
