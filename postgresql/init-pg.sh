@@ -46,6 +46,10 @@ else
    psql -c "CREATE EXTENSION postgis;" nhdplus
    psql -c "CREATE EXTENSION postgis_topology;" nhdplus
    psql -c "CREATE EXTENSION pgrouting;" nhdplus
+   
+   psql -c "GRANT usage ON SCHEMA topology TO public;" nhdplus
+   psql -c "GRANT all ON ALL TABLES IN SCHEMA topology TO public;" nhdplus
+   psql -c "GRANT usage, select ON ALL SEQUENCES IN SCHEMA topology TO public;" nhdplus
 
    psql -c "ALTER DATABASE nhdplus OWNER TO nhdplus;"
    psql -c "GRANT CREATE ON DATABASE nhdplus TO dz_lrs;"
@@ -62,8 +66,7 @@ else
    psql -c "CREATE SCHEMA loading_dock AUTHORIZATION nhdplus;" nhdplus
    psql -c "CREATE SCHEMA waterspg AUTHORIZATION waterspg;" nhdplus
    psql -c "ALTER SCHEMA waterspg OWNER TO waterspg;" nhdplus
-   psql -c "ALTER SCHEMA topology OWNER TO nhdplus_toponet;" nhdplus
-   
+  
    psql -c "CREATE OR REPLACE FUNCTION public.notify_ddl_postgrest() RETURNS event_trigger AS \$\$ DECLARE obj RECORD; BEGIN FOR obj IN SELECT * FROM pg_event_trigger_ddl_commands() LOOP IF obj.object_type IN ('type','function','procedure') THEN NOTIFY ddl_command_end; END IF; END LOOP; END; \$\$ LANGUAGE 'plpgsql';" nhdplus
    psql -c "CREATE EVENT TRIGGER ddl_postgrest ON ddl_command_end EXECUTE PROCEDURE public.notify_ddl_postgrest();" nhdplus
 
