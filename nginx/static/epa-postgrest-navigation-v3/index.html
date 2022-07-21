@@ -97,12 +97,16 @@
       </table>
       <select name="pSearchType" id="pSearchType" onchange="update_form();check_start();" style="margin-top: 6px;">
         <option value="UT" SELECTED>Upstream with Tributaries</option>
-        <option value="UM">Upstream Main Path Only</option>
-        <option value="DD">Downstream with Divergences</option>
-        <option value="DM">Downstream Main Path Only</option>
-        <option value="PP">Point to Point</option>
+        <option value="UM"   >Upstream Main Path Only</option>
+        <option value="DD"   >Downstream with Divergences</option>
+        <option value="DM"   >Downstream Main Path Only</option>
+        <option value="PP"   >Point to Point</option>
+        <option value="PPALL">Point to Point All Between</option>
       </select>
       <input name="pSearchMaxDistanceKm" type="text" class="text" id="pSearchMaxDistanceKm" style="display:inline; width:30px" value="15" />&nbsp;km
+      <br/>
+      <input type="checkbox" name="pReturnCatchments"        id="pReturnCatchments"       ><span style="font-family: Arial; font-size: 10px;">Return Catchments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input type="checkbox" name="pUseSimplifiedCatchments" id="pUseSimplifiedCatchments"><span style="font-family: Arial; font-size: 10px;">Use Simplified Catchments</span>
       <br/>
       <br/>
       <input type="button" onclick="run_service();" value="Start Search" id="dz_run_service" />&nbsp;
@@ -115,6 +119,8 @@
         <option value="GUMP"  >Guam / Marianas</option>
         <option value="AS"    >American Samoa</option>
       </select>
+      <br/>
+      <input type="checkbox" name="autozoom" id="autozoom" CHECKED><span style="font-family: Arial; font-size: 10px;">Auto Zoom</span>
     </div>
     <div id="notice" style="text-align: center"></div>
     <div id="output" style="text-align: center; margin-top: 20px;"></div>

@@ -1,0 +1,77 @@
+version: "3.7"
+x-postgresql_db  : &postgresql_db   dzwaters
+x-postgresql_host: &postgresql_host host.docker.internal
+x-postgresql_port: &postgresql_port 5432
+x-geoserver_port : &geoserver_port  8080
+x-postgrest_port : &postgrest_port  3000
+x-postgrest_schc : &postgrest_sch   waterspg
+x-postgrest_pass : &postgrest_pass  waterspg
+x-jupyter_port   : &jupyter_port    8888
+x-nginx_port     : &nginx_port      8081
+x-loading_dock   : &loading_dock    ./loading_dock
+x-workspace      : &workspace       ./workspace
+x-master_password: &master_password nhdplus
+services:
+    dz_pr:
+        build:
+            context: .
+            dockerfile: Dockerfile.pr
+            shm_size: '2gb'
+        hostname: dz_pr
+        environment:
+            POSTGRESQL_HOST: *postgresql_host
+            POSTGRESQL_PORT: *postgresql_port
+            POSTGRESQL_DB: *postgresql_db
+            POSTGREST_SCH: *postgrest_sch
+            POSTGREST_PASS: *postgrest_pass
+        ports:
+            - target: 3000
+              published: *postgrest_port
+        networks:
+            - dz
+        volumes:
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+        extra_hosts:
+            - host.docker.internal:host-gateway
+    dz_ng:
+        build:
+            context: .
+            dockerfile: Dockerfile.ng
+        hostname: dz_ng
+        environment:
+            POSTGRESQL_HOST: *postgresql_host
+            POSTGRESQL_PORT: *postgresql_port
+            POSTGRESQL_DB: *postgresql_db
+            POSTGREST_SCH: *postgrest_sch
+            POSTGREST_PASS: *postgrest_pass
+            JUPYTER_PORT: *jupyter_port
+            POSTGREST_PORT: *postgrest_port
+            GEOSERVER_PORT: *geoserver_port
+            NGINX_PORT: *nginx_port
+        ports:
+            - target: 8081
+              published: *nginx_port
+        networks:
+            - dz
+        volumes:
+            - type: bind
+              source: *loading_dock
+              target: /loading_dock
+            - type: bind
+              source: *workspace
+              target: /workspace
+        depends_on:
+            - dz_pr
+        extra_hosts:
+            - host.docker.internal:host-gateway
+networks:
+    dz:
+        driver: bridge
+volumes:
+    tblspdata:
+    pgdata:
+    geoserver-data:
+    jupyter:
+    home-jovyan:

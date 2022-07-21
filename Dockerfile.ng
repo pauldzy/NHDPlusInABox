@@ -20,7 +20,6 @@ RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
 COPY ./nginx/nginx-sites.conf /etc/nginx/sites-available/
 COPY ./nginx/uwsgi.ini /var/www/app/
 COPY ./nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY ./nginx /src
 
 RUN rm /etc/nginx/sites-enabled/default                           &&\
     dos2unix --quiet /etc/nginx/sites-available/nginx-sites.conf  &&\
@@ -36,12 +35,15 @@ RUN rm /etc/nginx/sites-enabled/default                           &&\
      Flask-Migrate                                                  \
      dicttoxml                                                      \
      psycopg2                                                       \
-     uWSGI                                                        &&\
-    mkdir -p /src/flask                                           &&\
+     uWSGI
+
+COPY ./nginx /src
+
+RUN mkdir -p /src/flask                                           &&\
     mkdir -p /src/log                                             &&\
     dos2unix --quiet /src/init.sh                                 &&\
     chmod 755 /src/init.sh
-
+    
 EXPOSE 8081
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]

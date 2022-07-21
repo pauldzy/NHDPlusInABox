@@ -1,7 +1,11 @@
 version: "3.7"
-x-postgresql_port: &postgresql_port 5432
-x-geoserver_port : &geoserver_port  8080
-x-postgrest_port : &postgrest_port  3000
+x-postgresql-db  : &postgresql-db   nhdplus
+x-postgresql-host: &postgresql-host dz_pg
+x-postgresql-port: &postgresql-port 5432
+x-geoserver-port : &geoserver-port  8080
+x-postgrest-port : &postgrest-port  3000
+x-postgrest-schc : &postgrest-sch   waterspg
+x-postgrest-pass : &postgrest-pass  nhdplus
 x-jupyter_port   : &jupyter_port    8888
 x-nginx_port     : &nginx_port      8081
 x-loading_dock   : &loading_dock    ./loading_dock
@@ -65,7 +69,11 @@ services:
             shm_size: '2gb'
         hostname: dz_pr
         environment:
-            POSTGRES_PASSWORD: *master_password
+            POSTGRESQL_HOST: *postgresql-host
+            POSTGRESQL_PORT: *postgresql-port
+            POSTGRESQL_DB: *postgresql-db
+            POSTGREST_SCH: *postgrest-sch
+            POSTGREST_PASS: *postgrest-pass
         ports:
             - target: 3000
               published: *postgrest_port
@@ -110,7 +118,11 @@ services:
             dockerfile: Dockerfile.ng
         hostname: dz_ng
         environment:
-            POSTGRES_PASSWORD: *master_password
+            POSTGRESQL_HOST: *postgresql-host
+            POSTGRESQL_PORT: *postgresql-port
+            POSTGRESQL_DB: *postgresql-db
+            POSTGREST_SCH: *postgrest-sch
+            POSTGREST_PASS: *postgrest-pass
             JUPYTER_PORT: *jupyter_port
             POSTGREST_PORT: *postgrest_port
             GEOSERVER_PORT: *geoserver_port

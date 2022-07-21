@@ -9,6 +9,7 @@ var geo_stem = window.location.protocol + "//" + window.location.hostname + ":" 
 
 var navigation_url =   rpc_stem + "/navigation_v3";
 var random_point_url = rpc_stem + "/random_point";
+var random_ppnav_url = rpc_stem + "/randomppnav";
 
 document.getElementById("dz_run_service").disabled = true;
 document.getElementById("busy").style.visibility = "hidden";
@@ -112,7 +113,7 @@ map.on(L.Draw.Event.CREATED, function(e) {
   var search_type = search_menu.options[search_menu.selectedIndex].value;
   var layer_count = drawnItems.getLayers().length;
 
-  if (search_type == "PP") {
+  if (search_type == "PP" || search_type == "PPALL") {
     if (layer_count == 2) {
       drawnItems.clearLayers();
       blank_wkts();
@@ -129,7 +130,7 @@ map.on(L.Draw.Event.CREATED, function(e) {
   }
 
   if (type === "marker") {
-    if (search_type == "PP") {
+    if (search_type == "PP" || search_type == "PPALL") {
       if (layer_count != 1) {
         wktval =
           "POINT(" + layer.getLatLng().lng + " " + layer.getLatLng().lat + ")";
@@ -185,9 +186,14 @@ var streams = new L.GeoJSON(null, {
   onEachFeature: onEachFeature_streams
 }).addTo(map);
 
+var catchments = new L.GeoJSON(null, {
+  onEachFeature: onEachFeature_catchments
+}).addTo(map);
+
 var layer_items = {
   "Snap Line": snapline,
   "Returned Streams": streams,
+  "Returned Catchments": catchments,
   "Flowlines": flowlines_ms,
   "Catchments SP": catchmentsp_ms,
   "Catchments": catchment_ms
@@ -239,6 +245,15 @@ function onEachFeature_streams(feature, layer) {
     );
   }
 }
+function onEachFeature_catchments(feature, layer) {
+  if (feature.properties && feature.properties.FeatureID) {
+    layer.bindPopup(
+      "<B>Returned Catchment</B><BR/>" + 
+      "FeatureID: " + feature.properties.FeatureID.toString() + "<BR/>" +
+      "Area (SqKm): " + feature.properties.AreaSqKm.toString()             
+    );
+  }
+}
 
 function run_service() {
   dz_clear();
@@ -247,6 +262,20 @@ function run_service() {
   var index_engine = document.getElementById("pIndexingEngine");
   var search_type = document.getElementById("pSearchType");
   var eventlst = document.getElementById("dz_programs");
+  
+  boo_return_catchments = document.getElementById("pReturnCatchments").checked;
+  if (boo_return_catchments) {
+     str_return_catchments = "TRUE";
+  } else {
+     str_return_catchments = "FALSE";
+  }
+  
+  boo_use_simplified_catchments = document.getElementById("pUseSimplifiedCatchments").checked;
+  if (boo_use_simplified_catchments) {
+     str_use_simplified_catchments = "TRUE";
+  } else {
+     str_use_simplified_catchments = "FALSE";
+  }
 
   // Load the parameters to pass to the service
   var data = {
@@ -263,6 +292,8 @@ function run_service() {
     "pFallbackLimitInNetwork": "TRUE",
     "pFallbackLimitNavigable": "TRUE",
     "pReturnLinkPath": "TRUE",
+    "pReturnCatchments": str_return_catchments,
+    "pUseSimplifiedCatchments": str_use_simplified_catchments,
     "pSearchType": search_type.options[search_type.selectedIndex].value,
     "pStartComID": document.getElementById("pStartComID").value,
     "pStartPermanentIdentifier": document.getElementById(
@@ -291,35 +322,46 @@ function navresponse(error, response) {
   } else if (response == null) {
     if (response.Result_Link_Path != null) {
       snapline.addData(response.Result_Link_Path).setStyle({
-        color: "#FFA500",
-        fillColor: "#FFA500"
+        color: "#FF6347",
+        fillColor: "#FF6347"
       });
     }
     document.getElementById("output").innerHTML = "<P>No results found.</P>";
   } else if (response.Return_Code != 0) {
     if (response.Result_Link_Path != null) {
       snapline.addData(response.Result_Link_Path).setStyle({
-        color: "#FFA500",
-        fillColor: "#FFA500"
+        color: "#FF6347",
+        fillColor: "#FF6347"
       });
     }
     document.getElementById("output").innerHTML = "<P>" + response.Status_Message + "</P>";
   } else {
     if (response.Result_Link_Path != null) {
       snapline.addData(response.Result_Link_Path).setStyle({
-        color: "#FFA500",
-        fillColor: "#FFA500"
+        color: "#FF6347",
+        fillColor: "#FF6347"
       });
     }
 
     if (response.Result_Streams_Selected != null) {
       streams.addData(response.Result_Streams_Selected).setStyle({
-        color: "#FFFF00",
-        fillColor: "#FFFF00"
+        color: "#FF0000",
+        fillColor: "#FF0000"
       });
     }
-
-    map.fitBounds(streams.getBounds());
+    
+    if (response.Result_Catchments_Selected != null) {
+      catchments.addData(response.Result_Catchments_Selected).setStyle({
+        color: "#FFA500",
+        fillColor: "#FFA500"
+      });
+    }
+    
+    boo_autozoom = document.getElementById("autozoom").checked;
+    if (boo_autozoom) {
+       map.fitBounds(streams.getBounds());
+    }
+    
   }
 
   busy_off();
@@ -327,14 +369,21 @@ function navresponse(error, response) {
 
 function run_random_point() {
   blank_comids();
-
+  busy_on();
+  
   var randomy = document.getElementById("randomy");
-
+  var search_menu = document.getElementById("pSearchType");
+  var search_type = search_menu.options[search_menu.selectedIndex].value;
+  
   var data = {
-    pRegion: randomy.options[randomy.selectedIndex].value
+     pRegion: randomy.options[randomy.selectedIndex].value
   };
 
-  L.esri.get(random_point_url, data, rand_response);
+  if ( search_type == 'PP' || search_type == 'PPALL' ) {
+     L.esri.get(random_ppnav_url, data, randpp_response);
+  } else {
+     L.esri.get(random_point_url, data, rand_response);
+  }
 }
 
 function rand_response(error, response) {
@@ -357,6 +406,26 @@ function rand_response(error, response) {
     ")";
   drawnItems.bindPopup(wktval);
   document.getElementById("dzWKT").value = wktval;
+
+  run_service();
+}
+
+function randpp_response(error, response) {
+  if (error) {
+    document.getElementById("output").innerHTML = "<P>" + error + "</P>";
+    busy_off();
+    return false;
+  }
+
+  blank_wkts();
+  blank_start_comids();
+  blank_stop_comids();
+  
+  document.getElementById("pStartComID").value   = response.ComID1;
+  document.getElementById("pStartMeasure").value = response.Measure1;
+  
+  document.getElementById("pStopComID").value    = response.ComID2;
+  document.getElementById("pStopMeasure").value  = response.Measure2;
 
   run_service();
 }
@@ -387,6 +456,7 @@ function dz_clear() {
   document.getElementById("output").innerHTML = "";
   snapline.clearLayers();
   streams.clearLayers();
+  catchments.clearLayers();
 }
 
 function busy_on() {
@@ -455,10 +525,10 @@ function check_start() {
   var rch2 = document.getElementById("pStopReachCode").value;
   var hyd2 = document.getElementById("pStopHydroSequence").value;
 
-  if (search_type != "PP" && wkt1 !== null && wkt1 !== "") {
+  if (search_type != "PP" && search_type != "PPALL" && wkt1 !== null && wkt1 !== "") {
     document.getElementById("dz_run_service").disabled = false;
   } else if (
-    search_type == "PP" &&
+    ( search_type == "PP" || search_type == "PPALL" ) &&
     wkt1 !== null &&
     wkt1 !== "" &&
     wkt2 !== null &&
@@ -466,7 +536,7 @@ function check_start() {
   ) {
     document.getElementById("dz_run_service").disabled = false;
   } else {
-    if (search_type == "PP") {
+    if (search_type == "PP" || search_type == "PPALL") {
       if (
         (com1 !== null && com1 !== "") ||
         (per1 !== null && per1 !== "") ||
@@ -552,7 +622,7 @@ function update_form() {
   var search_menu = document.getElementById("pSearchType");
   var search_type = search_menu.options[search_menu.selectedIndex].value;
 
-  if (search_type == "PP") {
+  if (search_type == "PP" || search_type == "PPALL") {
     document.getElementById("pStopComID").disabled = false;
     document.getElementById("pStopPermanentIdentifier").disabled = false;
     document.getElementById("pStopReachCode").disabled = false;

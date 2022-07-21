@@ -1,20 +1,79 @@
-FROM pauldzy/dzpostgrest:6.0.1
+FROM haskell:latest AS builder
 
 LABEL maintainer="Paul Dziemiela <Paul@Dziemiela.com>"
 
+# Current build is targeted towards PostgRest 9.0.1
+# Last updated July 20, 2022
+ENV POSTGREST_VERSION 9.0.1
+
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update                                     &&\
-    apt-get install -y --no-install-recommends           \
-       vim                                             &&\
-    rm -rf /var/lib/apt/lists/*     
+# Load packages needed to compile and run postgrest and pg_listen
+RUN printf "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d &&\
+    apt-get update                                     &&\
+    apt-get install -y                                   \
+       vim                                               \
+       apt-utils                                         \
+       dos2unix                                          \
+       psmisc                                            \
+       supervisor                                        \
+       gnupg                                             \
+       gnupg2                                            \
+       ca-certificates                                   \
+       lsb-release                                       \
+       libpq-dev                                         \
+       build-essential                                   \
+       pkg-config                                        \
+       clang                                             \
+       zip                                               \
+       unzip                                             \
+       wget                                            &&\
+    rm -rf /var/lib/apt/lists/*
     
+# Download and compile pg_listen
+RUN cd /tmp                                            &&\
+    wget --quiet -nv https://github.com/begriffs/pg_listen/archive/refs/heads/master.zip &&\
+    unzip -q master.zip                                &&\
+    cd /tmp/pg_listen-master                           &&\
+    ./configure                                        &&\
+    make CC=gcc                                        &&\
+    mv pg_listen /usr/local/bin                        &&\
+    chmod 755 /usr/local/bin/pg_listen                 &&\
+    rm -Rf /tmp/pg_listen-master
+    
+# Download and compile PostgREST after pinching away GET write restriction
+RUN cd /tmp                                            &&\
+    wget --quiet -nv https://github.com/PostgREST/postgrest/archive/v${POSTGREST_VERSION}.tar.gz &&\
+    tar -xf v${POSTGREST_VERSION}.tar.gz
+
+# This replacement often needs adjustment as new versions of PostgREST are released
+RUN cd /tmp/postgrest-${POSTGREST_VERSION}/src/PostgREST  &&\
+    sed -i.bak -e 'N;s/(ActionInvoke InvGet, _) ->.*\n.*SQL.Read/(ActionInvoke InvGet, _) ->\n      SQL.Write/g;P;D' App.hs
+    
+RUN cd /tmp/postgrest-${POSTGREST_VERSION}             &&\
+    stack build                                          \
+       --install-ghc                                     \
+       --copy-bins                                       \
+       --local-bin-path /usr/local/bin                   \
+       --verbosity info                                  \
+       --jobs 1                                        &&\
+    rm -Rf /tmp/postgrest-${POSTGREST_VERSION}
+    
+# Add official PostgreSQL repo as pg_listen needs a newer version of libpq-dev
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' &&\
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add - &&\
+    apt-get update                                     &&\
+    apt-get install -y libpq-dev                       &&\
+    rm -rf /var/lib/apt/lists/*
+       
+# Copy in the supervisor and postgrest configuration file
 COPY ./postgrest/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./postgrest/postgrest.conf /etc/postgrest.conf
 
 RUN dos2unix --quiet /etc/supervisor/conf.d/supervisord.conf &&\
     dos2unix --quiet /etc/postgrest.conf
     
+# Startup supervisor to allow both postgrest and pg_listen to run
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
 
 EXPOSE 3000
